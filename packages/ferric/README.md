@@ -11,7 +11,20 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 ```json
 "scripts": {
    "generate": "ferric generate folder_name",
-   "build": "ferric build --path folder_path",
+   "build": "ferric build --path folder_name_path",
    "build:release": "npm run build --configuration release",
 },
+```
+
+### Project Structure
+
+After generating the project, a folder would be created with the following file structure for the lib.
+
+```markdown
+lib_name
+│   Cargo.toml
+│   build.rs
+│   .gitignore
+└───src
+│   │   lib.rs
 ```
