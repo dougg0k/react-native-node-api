@@ -27,4 +27,9 @@ lib_name
 │   .gitignore
 └───src
 │   │   lib.rs
+└───dist (after build)
+│   │   index.js
+│   │   index.d.ts
+│   │   native_android_folder
+│   │   native_ios_folder
 ```
