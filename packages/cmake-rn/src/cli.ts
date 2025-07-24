@@ -30,7 +30,7 @@ const verboseOption = new Option(
 const sourcePathOption = new Option(
   "--source <path>",
   "Specify the source directory containing a CMakeLists.txt file",
-).default(process.cwd());
+).default(`${process.cwd()}/dist`);
 
 // TODO: Add "MinSizeRel" and "RelWithDebInfo"
 const configurationOption = new Option("--configuration <configuration>")

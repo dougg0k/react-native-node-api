@@ -1,5 +1,5 @@
 export function cargoTomlTemplate(projectName: string) {
-	return `
+  return `
 [package]
 name = ${projectName}
 version = "1.0.0"
