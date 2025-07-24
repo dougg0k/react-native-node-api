@@ -1,6 +1,6 @@
 ---
-"@react-native-node-api/ferric-example": minor
-"ferric-cli": minor
+"@react-native-node-api/ferric-example": patch
+"ferric-cli": patch
 ---
 
 Updated napi packages.
