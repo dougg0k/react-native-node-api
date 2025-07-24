@@ -3,4 +3,4 @@
 "ferric-cli": minor
 ---
 
-Updated napi versions
+Updated napi packages.
