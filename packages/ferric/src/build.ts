@@ -95,6 +95,10 @@ const outputPathOption = new Option(
   "--output <path>",
   "Writing outputs to this directory",
 ).default(process.cwd());
+const buildPathOption = new Option(
+  "--path <path>",
+  "Specify project path",
+).default(process.cwd());
 const configurationOption = new Option(
   "--configuration <configuration>",
   "Build configuration",
@@ -109,6 +113,7 @@ export const buildCommand = new Command("build")
   .addOption(androidTarget)
   .addOption(ndkVersionOption)
   .addOption(outputPathOption)
+  .addOption(buildPathOption)
   .addOption(configurationOption)
   .addOption(xcframeworkExtensionOption)
   .action(
@@ -118,6 +123,7 @@ export const buildCommand = new Command("build")
       android,
       ndkVersion,
       output: outputPath,
+      path: buildPath,
       configuration,
       xcframeworkExtension,
     }) => {
@@ -173,7 +179,10 @@ export const buildCommand = new Command("build")
             Promise.all(
               appleTargets.map(
                 async (target) =>
-                  [target, await build({ configuration, target })] as const,
+                  [
+                    target,
+                    await build({ configuration, buildPath, target }),
+                  ] as const,
               ),
             ),
             Promise.all(
@@ -183,6 +192,7 @@ export const buildCommand = new Command("build")
                     target,
                     await build({
                       configuration,
+                      buildPath,
                       target,
                       ndkVersion,
                       androidApiLevel: ANDROID_API_LEVEL,
@@ -272,7 +282,7 @@ export const buildCommand = new Command("build")
         await oraPromise(
           generateTypeScriptDeclarations({
             outputFilename: declarationsFilename,
-            createPath: process.cwd(),
+            createPath: buildPath,
             outputPath,
           }),
           {
@@ -352,7 +362,7 @@ async function combineLibraries(
           `Failed to combine Darwin libraries: ${error.message}`,
       },
     );
-    return [...result, universalPath];
+    return [...result, universalPath as string];
   }
 }
 

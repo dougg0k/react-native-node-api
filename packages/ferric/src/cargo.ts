@@ -60,6 +60,7 @@ export function ensureCargo() {
 
 type BuildOptions = {
   configuration: "debug" | "release";
+  buildPath: string;
 } & (
   | {
       target: AndroidTargetName;
@@ -74,21 +75,35 @@ type BuildOptions = {
 );
 
 export async function build(options: BuildOptions) {
-  const { target, configuration } = options;
-  await spawn("cargo", ["build", "--target", target], {
-    outputMode: "buffered",
-    env: {
-      ...process.env,
-      ...getTargetEnvironmentVariables(options),
-    },
-  });
+  const { target, configuration, buildPath } = options;
   const modeConfig =
     configuration.toLowerCase() === "release" ? "--release" : "";
+  const manifestBuildPath = `${buildPath}/Cargo.toml`;
+  await spawn(
+    "cargo",
+    [
+      "build",
+      "--target",
+      target,
+      modeConfig,
+      "--manifest-path",
+      manifestBuildPath,
+    ],
+    {
+      outputMode: "buffered",
+      env: {
+        ...process.env,
+        ...getTargetEnvironmentVariables(options),
+      },
+    },
+  );
   const targetOutputPath = joinPathAndAssertExistence(
     process.cwd(),
     "target",
     target,
     modeConfig,
+    "manifest-path",
+    manifestBuildPath,
   );
   const dynamicLibraryFile = fs
     .readdirSync(targetOutputPath)

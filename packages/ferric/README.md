@@ -10,8 +10,8 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 
 ```json
 "scripts": {
-   "generate:proj": "ferric generate folder_name",
-   "debug": "ferric build folder_name",
-   "release": "npm run debug --configuration release",
+   "generate": "ferric generate folder_name",
+   "build": "ferric build --path folder_path",
+   "build:release": "npm run build --configuration release",
 },
 ```
