@@ -1,7 +1,7 @@
-import { TestContext } from "node:test";
-import os from "node:os";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
+import type { TestContext } from "node:test";
 
 export interface FileMap {
   [key: string]: string | FileMap;
@@ -21,7 +21,7 @@ function writeFiles(fromPath: string, files: FileMap) {
 
 export function setupTempDirectory(context: TestContext, files: FileMap) {
   const tempDirectoryPath = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "react-native-node-api-test-"))
+    fs.mkdtempSync(path.join(os.tmpdir(), "react-native-node-api-test-")),
   );
 
   context.after(() => {

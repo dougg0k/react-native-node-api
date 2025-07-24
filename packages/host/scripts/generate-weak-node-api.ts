@@ -1,8 +1,8 @@
+import cp from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import cp from "node:child_process";
 
-import { FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
+import { type FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
 
 export const WEAK_NODE_API_PATH = path.join(__dirname, "../weak-node-api");
 
@@ -21,7 +21,7 @@ export function generateHeader(functions: FunctionDecl[]) {
       ({ returnType, noReturn, name, argumentTypes }) =>
         `${returnType} ${
           noReturn ? " __attribute__((noreturn))" : ""
-        }(*${name})(${argumentTypes.join(", ")});`
+        }(*${name})(${argumentTypes.join(", ")});`,
     ),
     "};",
     "typedef void(*InjectHostFunction)(const WeakNodeApiHost&);",

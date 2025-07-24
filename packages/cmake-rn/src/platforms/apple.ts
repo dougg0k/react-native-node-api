@@ -1,18 +1,17 @@
 import assert from "node:assert/strict";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
 
 import { Option } from "@commander-js/extra-typings";
+import chalk from "chalk";
 import { oraPromise } from "ora";
 import {
-  AppleTriplet as Target,
   createAppleFramework,
   createXCframework,
   determineXCFrameworkFilename,
+  type AppleTriplet as Target,
 } from "react-native-node-api";
-
 import type { Platform } from "./types.js";
-import chalk from "chalk";
 
 type XcodeSDKName =
   | "iphoneos"
@@ -89,7 +88,7 @@ export function getAppleBuildArgs() {
 
 const xcframeworkExtensionOption = new Option(
   "--xcframework-extension",
-  "Don't rename the xcframework to .apple.node"
+  "Don't rename the xcframework to .apple.node",
 ).default(false);
 
 type AppleOpts = {
@@ -130,19 +129,18 @@ export const platform: Platform<Target[], AppleOpts> = {
     // We expect the final application to sign these binaries
     return ["CODE_SIGNING_ALLOWED=NO"];
   },
-  isSupportedByHost: function (): boolean | Promise<boolean> {
-    return process.platform === "darwin";
-  },
+  isSupportedByHost: (): boolean | Promise<boolean> =>
+    process.platform === "darwin",
   async postBuild(
     { outputPath, targets },
-    { configuration, autoLink, xcframeworkExtension }
+    { configuration, autoLink, xcframeworkExtension },
   ) {
     const libraryPaths = await Promise.all(
       targets.map(async ({ outputPath }) => {
         const configSpecificPath = path.join(outputPath, configuration);
         assert(
           fs.existsSync(configSpecificPath),
-          `Expected a directory at ${configSpecificPath}`
+          `Expected a directory at ${configSpecificPath}`,
         );
         // Expect binary file(s), either .node or .dylib
         const files = await fs.promises.readdir(configSpecificPath);
@@ -157,18 +155,18 @@ export const platform: Platform<Target[], AppleOpts> = {
             return newFilePath;
           } else {
             throw new Error(
-              `Expected a .node or .dylib file, but found ${file}`
+              `Expected a .node or .dylib file, but found ${file}`,
             );
           }
         });
         assert.equal(result.length, 1, "Expected exactly one library file");
         return await result[0];
-      })
+      }),
     );
     const frameworkPaths = libraryPaths.map(createAppleFramework);
     const xcframeworkFilename = determineXCFrameworkFilename(
       frameworkPaths,
-      xcframeworkExtension ? ".xcframework" : ".apple.node"
+      xcframeworkExtension ? ".xcframework" : ".apple.node",
     );
 
     // Create the xcframework
@@ -183,10 +181,10 @@ export const platform: Platform<Target[], AppleOpts> = {
       {
         text: "Assembling XCFramework",
         successText: `XCFramework assembled into ${chalk.dim(
-          path.relative(process.cwd(), xcframeworkOutputPath)
+          path.relative(process.cwd(), xcframeworkOutputPath),
         )}`,
         failText: ({ message }) => `Failed to assemble XCFramework: ${message}`,
-      }
+      },
     );
   },
 };

@@ -1,11 +1,10 @@
 import assert from "node:assert/strict";
-import { describe, it, TestContext } from "node:test";
 import path from "node:path";
+import { describe, it, type TestContext } from "node:test";
 
 import { transformFileSync } from "@babel/core";
-
-import { plugin, PluginOptions } from "./plugin.js";
 import { setupTempDirectory } from "../test-utils.js";
+import { type PluginOptions, plugin } from "./plugin.js";
 
 type TestTransformationOptions = {
   files: Record<string, string>;
@@ -16,13 +15,13 @@ type TestTransformationOptions = {
 
 function itTransforms(
   title: string,
-  { files, inputFilePath, assertion, options = {} }: TestTransformationOptions
+  { files, inputFilePath, assertion, options = {} }: TestTransformationOptions,
 ) {
   it(`transforms ${title}`, (context: TestContext) => {
     const tempDirectoryPath = setupTempDirectory(context, files);
     const result = transformFileSync(
       path.join(tempDirectoryPath, inputFilePath),
-      { plugins: [[plugin, options]] }
+      { plugins: [[plugin, options]] },
     );
     assert(result, "Expected transformation to produce a result");
     const { code } = result;
@@ -36,12 +35,12 @@ function assertIncludes(needle: string, { reverse = false } = {}) {
     if (reverse) {
       assert(
         !code.includes(needle),
-        `Expected code to not include: ${needle}, got ${code}`
+        `Expected code to not include: ${needle}, got ${code}`,
       );
     } else {
       assert(
         code.includes(needle),
-        `Expected code to include: ${needle}, got ${code}`
+        `Expected code to include: ${needle}, got ${code}`,
       );
     }
   };
@@ -91,7 +90,7 @@ describe("plugin", () => {
         inputFilePath: "index.js",
         options: { pathSuffix: "keep" },
         assertion: assertIncludes(
-          `requireNodeAddon("my-package--sub-dir-my-addon")`
+          `requireNodeAddon("my-package--sub-dir-my-addon")`,
         ),
       });
 
@@ -170,7 +169,7 @@ describe("plugin", () => {
         inputFilePath: "index.js",
         options: { pathSuffix: "keep" },
         assertion: assertIncludes(
-          `requireNodeAddon("my-package--build-Release-my-addon")`
+          `requireNodeAddon("my-package--build-Release-my-addon")`,
         ),
       });
 

@@ -1,16 +1,16 @@
 import assert from "node:assert/strict";
 import path from "node:path";
 
-import type { PluginObj, NodePath } from "@babel/core";
+import type { NodePath, PluginObj } from "@babel/core";
 import * as t from "@babel/types";
 
 import {
+  assertPathSuffix,
+  findNodeAddonForBindings,
   getLibraryName,
   isNodeApiModule,
-  findNodeAddonForBindings,
-  NamingStrategy,
-  PathSuffixChoice,
-  assertPathSuffix,
+  type NamingStrategy,
+  type PathSuffixChoice,
 } from "../path-utils";
 
 export type PluginOptions = {
@@ -36,7 +36,7 @@ function assertOptions(opts: unknown): asserts opts is PluginOptions {
 export function replaceWithRequireNodeAddon(
   p: NodePath,
   modulePath: string,
-  naming: NamingStrategy
+  naming: NamingStrategy,
 ) {
   const requireCallArgument = getLibraryName(modulePath, naming);
   p.replaceWith(
@@ -45,10 +45,10 @@ export function replaceWithRequireNodeAddon(
         t.callExpression(t.identifier("require"), [
           t.stringLiteral("react-native-node-api"),
         ]),
-        t.identifier("requireNodeAddon")
+        t.identifier("requireNodeAddon"),
       ),
-      [t.stringLiteral(requireCallArgument)]
-    )
+      [t.stringLiteral(requireCallArgument)],
+    ),
   );
 }
 

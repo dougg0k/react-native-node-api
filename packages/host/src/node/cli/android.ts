@@ -5,8 +5,8 @@ import path from "node:path";
 import { getLatestMtime, getLibraryName, MAGIC_FILENAME } from "../path-utils";
 import {
   getLinkedModuleOutputPath,
-  LinkModuleResult,
   type LinkModuleOptions,
+  type LinkModuleResult,
 } from "./link-modules";
 
 const ANDROID_ARCHITECTURES = [
@@ -55,7 +55,7 @@ export async function linkAndroidDir({
     const libraryPath = path.join(libraryDirent.parentPath, libraryDirent.name);
     await fs.promises.rename(
       libraryPath,
-      path.join(archPath, `lib${libraryName}.so`)
+      path.join(archPath, `lib${libraryName}.so`),
     );
   }
   await fs.promises.rm(path.join(outputPath, MAGIC_FILENAME), {

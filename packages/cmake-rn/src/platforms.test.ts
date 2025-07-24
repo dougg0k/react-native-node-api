@@ -1,12 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-
+import type { Platform } from "./platforms/types.js";
 import {
-  platforms,
-  platformHasTarget,
   findPlatformForTarget,
+  platformHasTarget,
+  platforms,
 } from "./platforms.js";
-import { Platform } from "./platforms/types.js";
 
 const mockPlatform = { targets: ["target1", "target2"] } as unknown as Platform;
 

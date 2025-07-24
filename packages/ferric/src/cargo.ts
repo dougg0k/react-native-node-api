@@ -5,16 +5,15 @@ import path from "node:path";
 
 import { spawn } from "bufout";
 import chalk from "chalk";
+import { weakNodeApiPath } from "react-native-node-api";
 
 import { assertFixable, UsageError } from "./errors.js";
 import {
-  AndroidTargetName,
-  AppleTargetName,
+  type AndroidTargetName,
+  type AppleTargetName,
   isAndroidTarget,
   isAppleTarget,
 } from "./targets.js";
-
-import { weakNodeApiPath } from "react-native-node-api";
 
 const APPLE_XCFRAMEWORK_CHILDS_PER_TARGET: Record<AppleTargetName, string> = {
   "aarch64-apple-darwin": "macos-arm64_x86_64", // Universal
@@ -54,7 +53,7 @@ export function ensureCargo() {
   } catch (error) {
     throw new UsageError(
       "You need a Rust toolchain: https://doc.rust-lang.org/cargo/getting-started/installation.html#install-rust-and-cargo",
-      { cause: error }
+      { cause: error },
     );
   }
 }
@@ -83,18 +82,20 @@ export async function build(options: BuildOptions) {
       ...getTargetEnvironmentVariables(options),
     },
   });
+  const modeConfig =
+    configuration.toLowerCase() === "release" ? "--release" : "";
   const targetOutputPath = joinPathAndAssertExistence(
     process.cwd(),
     "target",
     target,
-    configuration
+    modeConfig,
   );
   const dynamicLibraryFile = fs
     .readdirSync(targetOutputPath)
     .filter((file) => file.endsWith(".so") || file.endsWith(".dylib"));
   assert(
     dynamicLibraryFile.length === 1,
-    `Expected a single shared object file in ${targetOutputPath}`
+    `Expected a single shared object file in ${targetOutputPath}`,
   );
   return joinPathAndAssertExistence(targetOutputPath, dynamicLibraryFile[0]);
 }
@@ -126,7 +127,7 @@ export function getWeakNodeApiFrameworkPath(target: AppleTargetName) {
   return joinPathAndAssertExistence(
     weakNodeApiPath,
     "weak-node-api.xcframework",
-    APPLE_XCFRAMEWORK_CHILDS_PER_TARGET[target]
+    APPLE_XCFRAMEWORK_CHILDS_PER_TARGET[target],
   );
 }
 
@@ -134,7 +135,7 @@ export function getWeakNodeApiAndroidLibraryPath(target: AndroidTargetName) {
   return joinPathAndAssertExistence(
     weakNodeApiPath,
     "weak-node-api.android.node",
-    ANDROID_ARCH_PR_TARGET[target]
+    ANDROID_ARCH_PR_TARGET[target],
   );
 }
 
@@ -152,7 +153,7 @@ export function getTargetEnvironmentVariables({
       `Missing ANDROID_HOME environment variable`,
       {
         instructions: "Set ANDROID_HOME to the Android SDK directory",
-      }
+      },
     );
     const ndkPath = path.join(ANDROID_HOME, "ndk", ndkVersion);
     assertFixable(fs.existsSync(ndkPath), `Expected NDK at ${ndkPath}`, {
@@ -175,35 +176,35 @@ export function getTargetEnvironmentVariables({
       ].join(String.fromCharCode(0x1f)),
       CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `aarch64-linux-android${androidApiLevel}-clang${cmdMaybe}`
+        `aarch64-linux-android${androidApiLevel}-clang${cmdMaybe}`,
       ),
       CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `armv7a-linux-androideabi${androidApiLevel}-clang${cmdMaybe}`
+        `armv7a-linux-androideabi${androidApiLevel}-clang${cmdMaybe}`,
       ),
       CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `x86_64-linux-android${androidApiLevel}-clang${cmdMaybe}`
+        `x86_64-linux-android${androidApiLevel}-clang${cmdMaybe}`,
       ),
       CARGO_TARGET_I686_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `i686-linux-android${androidApiLevel}-clang${cmdMaybe}`
+        `i686-linux-android${androidApiLevel}-clang${cmdMaybe}`,
       ),
       TARGET_CC: joinPathAndAssertExistence(
         toolchainBinPath,
-        `${targetArch}-linux-${targetPlatform}-clang${cmdMaybe}`
+        `${targetArch}-linux-${targetPlatform}-clang${cmdMaybe}`,
       ),
       TARGET_CXX: joinPathAndAssertExistence(
         toolchainBinPath,
-        `${targetArch}-linux-${targetPlatform}-clang++${cmdMaybe}`
+        `${targetArch}-linux-${targetPlatform}-clang++${cmdMaybe}`,
       ),
       TARGET_AR: joinPathAndAssertExistence(
         toolchainBinPath,
-        `llvm-ar${exeMaybe}`
+        `llvm-ar${exeMaybe}`,
       ),
       TARGET_RANLIB: joinPathAndAssertExistence(
         toolchainBinPath,
-        `llvm-ranlib${exeMaybe}`
+        `llvm-ranlib${exeMaybe}`,
       ),
       ANDROID_NDK: ndkPath,
       PATH: `${toolchainBinPath}:${process.env.PATH}`,

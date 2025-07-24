@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable no-undef */
-const assert = require("assert");
+const assert = require("node:assert");
 const addon = require("bindings")("addon.node");
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Unknown
 const toLocaleString = (text) => {
   return text
     .toString()
@@ -15,7 +14,7 @@ module.exports = () => {
   assert.strictEqual(toLocaleString(addon.newBuffer()), addon.theText);
   assert.strictEqual(toLocaleString(addon.newExternalBuffer()), addon.theText);
   assert.strictEqual(toLocaleString(addon.copyBuffer()), addon.theText);
-  let buffer = addon.staticBuffer();
+  const buffer = addon.staticBuffer();
   assert.strictEqual(addon.bufferHasInstance(buffer), true);
   assert.strictEqual(addon.bufferInfo(buffer), true);
   addon.invalidObjectAsBuffer({});

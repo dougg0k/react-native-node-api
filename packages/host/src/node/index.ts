@@ -1,27 +1,26 @@
-export {
-  SUPPORTED_TRIPLETS,
-  ANDROID_TRIPLETS,
-  APPLE_TRIPLETS,
-  type SupportedTriplet,
-  type AndroidTriplet,
-  type AppleTriplet,
-  isSupportedTriplet,
-  isAppleTriplet,
-  isAndroidTriplet,
-} from "./prebuilds/triplets.js";
+export { determineLibraryBasename, prettyPath } from "./path-utils.js";
 
 export {
-  determineAndroidLibsFilename,
   createAndroidLibsDirectory,
+  determineAndroidLibsFilename,
 } from "./prebuilds/android.js";
 
 export {
   createAppleFramework,
-  createXCframework,
   createUniversalAppleLibrary,
+  createXCframework,
   determineXCFrameworkFilename,
 } from "./prebuilds/apple.js";
-
-export { determineLibraryBasename, prettyPath } from "./path-utils.js";
+export {
+  ANDROID_TRIPLETS,
+  type AndroidTriplet,
+  APPLE_TRIPLETS,
+  type AppleTriplet,
+  isAndroidTriplet,
+  isAppleTriplet,
+  isSupportedTriplet,
+  SUPPORTED_TRIPLETS,
+  type SupportedTriplet,
+} from "./prebuilds/triplets.js";
 
 export { weakNodeApiPath } from "./weak-node-api.js";

@@ -3,15 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { Option } from "@commander-js/extra-typings";
+import chalk from "chalk";
+import { oraPromise } from "ora";
 import {
   createAndroidLibsDirectory,
   determineAndroidLibsFilename,
-  AndroidTriplet as Target,
+  type AndroidTriplet as Target,
 } from "react-native-node-api";
-
 import type { Platform } from "./types.js";
-import { oraPromise } from "ora";
-import chalk from "chalk";
 
 // This should match https://github.com/react-native-community/template/blob/main/template/android/build.gradle#L7
 const DEFAULT_NDK_VERSION = "27.1.12297006";
@@ -28,12 +27,12 @@ export const ANDROID_ARCHITECTURES = {
 
 const ndkVersionOption = new Option(
   "--ndk-version <version>",
-  "The NDK version to use for Android builds"
+  "The NDK version to use for Android builds",
 ).default(DEFAULT_NDK_VERSION);
 
 const androidSdkVersionOption = new Option(
   "--android-sdk-version <version>",
-  "The Android SDK version to use for Android builds"
+  "The Android SDK version to use for Android builds",
 ).default(DEFAULT_ANDROID_SDK_VERSION);
 
 type AndroidOpts = { ndkVersion: string; androidSdkVersion: string };
@@ -65,22 +64,22 @@ export const platform: Platform<Target[], AndroidOpts> = {
     const { ANDROID_HOME } = process.env;
     assert(
       typeof ANDROID_HOME === "string",
-      "Missing env variable ANDROID_HOME"
+      "Missing env variable ANDROID_HOME",
     );
     assert(
       fs.existsSync(ANDROID_HOME),
-      `Expected the Android SDK at ${ANDROID_HOME}`
+      `Expected the Android SDK at ${ANDROID_HOME}`,
     );
     const installNdkCommand = `sdkmanager --install "ndk;${ndkVersion}"`;
     const ndkPath = path.resolve(ANDROID_HOME, "ndk", ndkVersion);
     assert(
       fs.existsSync(ndkPath),
-      `Missing Android NDK v${ndkVersion} (at ${ndkPath}) - run: ${installNdkCommand}`
+      `Missing Android NDK v${ndkVersion} (at ${ndkPath}) - run: ${installNdkCommand}`,
     );
 
     const toolchainPath = path.join(
       ndkPath,
-      "build/cmake/android.toolchain.cmake"
+      "build/cmake/android.toolchain.cmake",
     );
     const architecture = ANDROID_ARCHITECTURES[target];
 
@@ -130,7 +129,7 @@ export const platform: Platform<Target[], AndroidOpts> = {
         targets.map(async ({ target, outputPath }) => {
           assert(
             fs.existsSync(outputPath),
-            `Expected a directory at ${outputPath}`
+            `Expected a directory at ${outputPath}`,
           );
           // Expect binary file(s), either .node or .so
           const dirents = await fs.promises.readdir(outputPath, {
@@ -140,16 +139,16 @@ export const platform: Platform<Target[], AndroidOpts> = {
             .filter(
               (dirent) =>
                 dirent.isFile() &&
-                (dirent.name.endsWith(".so") || dirent.name.endsWith(".node"))
+                (dirent.name.endsWith(".so") || dirent.name.endsWith(".node")),
             )
             .map((dirent) => path.join(dirent.parentPath, dirent.name));
           assert.equal(result.length, 1, "Expected exactly one library file");
           return [target, result[0]] as const;
-        })
-      )
+        }),
+      ),
     ) as Record<Target, string>;
     const androidLibsFilename = determineAndroidLibsFilename(
-      Object.values(libraryPathByTriplet)
+      Object.values(libraryPathByTriplet),
     );
     const androidLibsOutputPath = path.resolve(outputPath, androidLibsFilename);
 
@@ -162,11 +161,11 @@ export const platform: Platform<Target[], AndroidOpts> = {
       {
         text: "Assembling Android libs directory",
         successText: `Android libs directory assembled into ${chalk.dim(
-          path.relative(process.cwd(), androidLibsOutputPath)
+          path.relative(process.cwd(), androidLibsOutputPath),
         )}`,
         failText: ({ message }) =>
           `Failed to assemble Android libs directory: ${message}`,
-      }
+      },
     );
   },
 };

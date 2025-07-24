@@ -1,9 +1,8 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-
-import { AndroidTriplet } from "./triplets.js";
 import { determineLibraryBasename } from "../path-utils.js";
+import type { AndroidTriplet } from "./triplets.js";
 
 export const DEFAULT_ANDROID_TRIPLETS = [
   "aarch64-linux-android",
@@ -47,7 +46,7 @@ export async function createAndroidLibsDirectory({
   for (const [triplet, libraryPath] of Object.entries(libraryPathByTriplet)) {
     assert(
       fs.existsSync(libraryPath),
-      `Library not found: ${libraryPath} for triplet ${triplet}`
+      `Library not found: ${libraryPath} for triplet ${triplet}`,
     );
     const arch = ANDROID_ARCHITECTURES[triplet as AndroidTriplet];
     const archOutputPath = path.join(outputPath, arch);
@@ -68,7 +67,7 @@ export async function createAndroidLibsDirectory({
     await fs.promises.writeFile(
       path.join(outputPath, "react-native-node-api-module"),
       "",
-      "utf8"
+      "utf8",
     );
   }
   return outputPath;
