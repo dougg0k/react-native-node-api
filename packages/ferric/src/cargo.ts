@@ -76,8 +76,9 @@ type BuildOptions = {
 
 export async function build(options: BuildOptions) {
   const { target, configuration } = options;
-	const modeConfig = configuration.toLowerCase() === "release" ? "--release" : "";
-  await spawn("cargo", ["build", "--target", target, modeConfig], {
+  const modeConfig = configuration.toLowerCase() === "release" ? "--release" : "";
+  const cargoBuildArgs = ["build", "--target", target, modeConfig].filter(item => String(item).length > 0)
+  await spawn("cargo", cargoBuildArgs, {
     outputMode: "buffered",
     env: {
       ...process.env,
