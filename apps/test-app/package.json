@@ -30,7 +30,6 @@
     "@types/mocha": "^10.0.10",
     "@types/react": "^19.0.0",
     "concurrently": "^9.1.2",
-    "ferric-example": "^0.1.0",
     "mocha": "^11.6.0",
     "mocha-remote-cli": "^1.13.2",
     "mocha-remote-react-native": "^1.13.2",

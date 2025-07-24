@@ -44,16 +44,6 @@ function loadTests({
       });
     }
   });
-
-  describeIf(ferricExample, "ferric-example", () => {
-    it("exports a callable sum function", () => {
-      const exampleAddon = require("ferric-example");
-      const result = exampleAddon.sum(1, 3);
-      if (result !== 4) {
-        throw new Error(`Expected 1 + 3 to equal 4, but got ${result}`);
-      }
-    });
-  });
 }
 
 export default function App() {
