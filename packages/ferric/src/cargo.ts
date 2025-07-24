@@ -76,9 +76,11 @@ type BuildOptions = {
 
 export async function build(options: BuildOptions) {
   const { target, configuration } = options;
-  const modeConfig = configuration.toLowerCase() === "release" ? "--release" : "";
-  const cargoBuildArgs = ["build", "--target", target, modeConfig].filter(item => String(item).length > 0)
-  await spawn("cargo", cargoBuildArgs, {
+  const args = ["build", "--target", target]
+  if (configuration.toLowerCase() === 'release') {
+    args.push('--release')
+  }
+  await spawn("cargo", args, {
     outputMode: "buffered",
     env: {
       ...process.env,
@@ -89,7 +91,7 @@ export async function build(options: BuildOptions) {
     process.cwd(),
     "target",
     target,
-    modeConfig
+    configuration
   );
   const dynamicLibraryFile = fs
     .readdirSync(targetOutputPath)
