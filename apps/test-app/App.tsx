@@ -1,19 +1,18 @@
-import React from "react";
-import { StyleSheet, View, SafeAreaView } from "react-native";
-
+import { suites as nodeAddonExamplesSuites } from "@react-native-node-api/node-addon-examples";
 import {
-  MochaRemoteProvider,
   ConnectionText,
+  MochaRemoteProvider,
   StatusEmoji,
   StatusText,
 } from "mocha-remote-react-native";
-
-import { suites as nodeAddonExamplesSuites } from "@react-native-node-api/node-addon-examples";
+// biome-ignore lint/correctness/noUnusedImports: Keep React
+import React from "react";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 
 function describeIf(
   condition: boolean,
   title: string,
-  fn: (this: Mocha.Suite) => void
+  fn: (this: Mocha.Suite) => void,
 ) {
   return condition ? describe(title, fn) : describe.skip(title, fn);
 }
@@ -31,7 +30,7 @@ function loadTests({
 }: Context) {
   describeIf(nodeAddonExamples, "Node Addon Examples", () => {
     for (const [suiteName, examples] of Object.entries(
-      nodeAddonExamplesSuites
+      nodeAddonExamplesSuites,
     )) {
       describe(suiteName, () => {
         for (const [exampleName, requireExample] of Object.entries(examples)) {
@@ -48,7 +47,7 @@ function loadTests({
 
   describeIf(ferricExample, "ferric-example", () => {
     it("exports a callable sum function", () => {
-      /* eslint-disable-next-line @typescript-eslint/no-require-imports -- TODO: Determine why a dynamic import doesn't work on Android */
+      // TODO: Determine why a dynamic import doesn't work on Android */
       const exampleAddon = require("ferric-example");
       const result = exampleAddon.sum(1, 3);
       if (result !== 4) {

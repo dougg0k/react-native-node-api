@@ -1,8 +1,8 @@
+import cp from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import cp from "node:child_process";
 
-import { FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
+import { type FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
 
 export const CPP_SOURCE_PATH = path.join(__dirname, "../cpp");
 
@@ -63,7 +63,7 @@ export function generateSource(functions: FunctionDecl[]) {
       ${functions
         .filter(
           ({ kind, name }) =>
-            kind === "engine" || IMPLEMENTED_RUNTIME_FUNCTIONS.includes(name)
+            kind === "engine" || IMPLEMENTED_RUNTIME_FUNCTIONS.includes(name),
         )
         .flatMap(({ name }) => `.${name} = ${name},`)
         .join("\n")}

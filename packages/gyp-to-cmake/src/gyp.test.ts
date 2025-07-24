@@ -1,5 +1,5 @@
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 
 import { assertBinding } from "./gyp.js";
 
@@ -28,7 +28,7 @@ describe("gyp.assertRoot", () => {
         {
           targets: [{ target_name: "", sources: [], extra: "not allowed" }],
         },
-        true
+        true,
       );
     }, /Unexpected property: extra/);
   });

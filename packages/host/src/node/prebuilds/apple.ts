@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
-import fs from "node:fs";
-import path from "node:path";
-import os from "node:os";
 import cp from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
 import { spawn } from "bufout";
-
-import { AppleTriplet } from "./triplets.js";
 import { determineLibraryBasename } from "../path-utils.js";
+import type { AppleTriplet } from "./triplets.js";
 
 type AppleArchitecture = "arm64" | "x86_64" | "arm64;x86_64";
 
@@ -51,7 +50,7 @@ export function createAppleFramework(libraryPath: string) {
   const libraryName = path.basename(libraryPath, path.extname(libraryPath));
   const frameworkPath = path.join(
     path.dirname(libraryPath),
-    `${libraryName}.framework`
+    `${libraryName}.framework`,
   );
   // Create the framework from scratch
   fs.rmSync(frameworkPath, { recursive: true, force: true });
@@ -71,7 +70,7 @@ export function createAppleFramework(libraryPath: string) {
       CFBundleVersion: "1",
       NSPrincipalClass: "",
     }),
-    "utf8"
+    "utf8",
   );
   const newLibraryPath = path.join(frameworkPath, libraryName);
   // TODO: Consider copying the library instead of renaming it
@@ -111,7 +110,7 @@ export async function createXCframework({
     ],
     {
       outputMode: "buffered",
-    }
+    },
   );
   if (xcodeOutputPath !== outputPath) {
     // Rename the xcframework to the original output path
@@ -123,7 +122,7 @@ export async function createXCframework({
     fs.writeFileSync(
       path.join(outputPath, "react-native-node-api-module"),
       "",
-      "utf8"
+      "utf8",
     );
   }
 }
@@ -134,7 +133,7 @@ export async function createXCframework({
  */
 export function determineXCFrameworkFilename(
   frameworkPaths: string[],
-  extension: ".xcframework" | ".apple.node" = ".xcframework"
+  extension: ".xcframework" | ".apple.node" = ".xcframework",
 ) {
   const name = determineLibraryBasename(frameworkPaths);
   return `${name}${extension}`;
@@ -145,11 +144,11 @@ export async function createUniversalAppleLibrary(libraryPaths: string[]) {
   const filenames = new Set(libraryPaths.map((p) => path.basename(p)));
   assert(
     filenames.size === 1,
-    "Expected all darwin libraries to have the same name"
+    "Expected all darwin libraries to have the same name",
   );
   const [filename] = filenames;
   const lipoParentPath = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "ferric-lipo-output-"))
+    fs.mkdtempSync(path.join(os.tmpdir(), "ferric-lipo-output-")),
   );
   const outputPath = path.join(lipoParentPath, filename);
   await spawn("lipo", ["-create", "-output", outputPath, ...libraryPaths], {
