@@ -16,7 +16,7 @@ import {
   normalizeModulePath,
   PLATFORMS,
   type PlatformName,
-  prettyPath,
+  prettyPath
 } from "../path-utils";
 import { linkAndroidDir } from "./android";
 import { linkXcframework } from "./apple";
@@ -24,7 +24,7 @@ import { command as vendorHermes } from "./hermes";
 import {
   linkModules,
   type ModuleLinker,
-  pruneLinkedModules,
+  pruneLinkedModules
 } from "./link-modules";
 import { pathSuffixOption } from "./options";
 
@@ -32,7 +32,7 @@ import { pathSuffixOption } from "./options";
 EventEmitter.defaultMaxListeners = 100;
 
 export const program = new Command("react-native-node-api").addCommand(
-  vendorHermes,
+  vendorHermes
 );
 
 function getLinker(platform: PlatformName): ModuleLinker {
@@ -61,12 +61,12 @@ program
   .option(
     "--force",
     "Don't check timestamps of input files to skip unnecessary rebuilds",
-    false,
+    false
   )
   .option(
     "--prune",
     "Delete vendored modules that are no longer auto-linked",
-    true,
+    true
   )
   .option("--android", "Link Android modules")
   .option("--apple", "Link Apple modules")
@@ -84,7 +84,7 @@ program
     if (platforms.length === 0) {
       console.error(
         `No platform specified, pass one or more of:`,
-        ...PLATFORMS.map((platform) => chalk.bold(`\n  --${platform}`)),
+        ...PLATFORMS.map((platform) => chalk.bold(`\n  --${platform}`))
       );
       process.exitCode = 1;
       return;
@@ -100,20 +100,20 @@ program
             fromPath: path.resolve(pathArg),
             incremental: !force,
             naming: { pathSuffix },
-            linker: getLinker(platform),
+            linker: getLinker(platform)
           }),
         {
           text: `Linking ${platformDisplayName} Node-API modules into ${prettyPath(
-            platformOutputPath,
+            platformOutputPath
           )}`,
           successText: `Linked ${platformDisplayName} Node-API modules into ${prettyPath(
-            platformOutputPath,
+            platformOutputPath
           )}`,
           failText: (error) =>
             `Failed to link ${platformDisplayName} Node-API modules into ${prettyPath(
-              platformOutputPath,
-            )}: ${error.message}`,
-        },
+              platformOutputPath
+            )}: ${error.message}`
+        }
       );
 
       if (modules.length === 0) {
@@ -133,14 +133,14 @@ program
             "Skipped",
             prettyPath(originalPath),
             prettyOutputPath,
-            "(up to date)",
+            "(up to date)"
           );
         } else {
           console.log(
             chalk.greenBright("⚭"),
             "Linked",
             prettyPath(originalPath),
-            prettyOutputPath,
+            prettyOutputPath
           );
         }
       }
@@ -151,7 +151,7 @@ program
           "\n",
           chalk.redBright("✖"),
           "Failed to copy",
-          prettyPath(originalPath),
+          prettyPath(originalPath)
         );
         console.error(failure.message);
         failure.flushOutput("both");
@@ -175,7 +175,7 @@ program
     const dependencies = await findNodeApiModulePathsByDependency({
       fromPath: rootPath,
       platform: PLATFORMS,
-      includeSelf: true,
+      includeSelf: true
     });
 
     if (json) {
@@ -184,7 +184,7 @@ program
       const dependencyCount = Object.keys(dependencies).length;
       const xframeworkCount = Object.values(dependencies).reduce(
         (acc, { modulePaths }) => acc + modulePaths.length,
-        0,
+        0
       );
       console.log(
         "Found",
@@ -193,17 +193,17 @@ program
         chalk.greenBright(dependencyCount),
         dependencyCount === 1 ? "package" : "packages",
         "from",
-        prettyPath(rootPath),
+        prettyPath(rootPath)
       );
       for (const [dependencyName, dependency] of Object.entries(dependencies)) {
         console.log(
           chalk.blueBright(dependencyName),
           "→",
-          prettyPath(dependency.path),
+          prettyPath(dependency.path)
         );
         logModulePaths(
           dependency.modulePaths.map((p) => path.join(dependency.path, p)),
-          { pathSuffix },
+          { pathSuffix }
         );
       }
     }
@@ -212,7 +212,7 @@ program
 program
   .command("info <path>")
   .description(
-    "Utility to print, module path, the hash of a single Android library",
+    "Utility to print, module path, the hash of a single Android library"
   )
   .addOption(pathSuffixOption)
   .action((pathInput, { pathSuffix }) => {
@@ -221,13 +221,13 @@ program
     const { packageName, relativePath } =
       determineModuleContext(resolvedModulePath);
     const libraryName = getLibraryName(resolvedModulePath, {
-      pathSuffix,
+      pathSuffix
     });
     console.log({
       resolvedModulePath,
       normalizedModulePath,
       packageName,
       relativePath,
-      libraryName,
+      libraryName
     });
   });

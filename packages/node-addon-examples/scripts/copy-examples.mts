@@ -32,7 +32,7 @@ const ALLOW_LIST = [
   // "5-async-work/async_pi_estimate/node-addon-api/" // Disabled, as it's using process.argv
   // "5-async-work/async_work_promise/napi/" // Disabled, as it's using process.argv
   // "5-async-work/async_work_promise/node-addon-api/" // Disabled, as it's using process.argv
-  "5-async-work/async_work_thread_safe_function/napi/",
+  "5-async-work/async_work_thread_safe_function/napi/"
   // "5-async-work/async-iterator/node-addon-api/" // Brings its own CMake project 👀
   // "5-async-work/call-js-from-async-worker-execute/node-addon-api/" // Disabled, as it's using "node:events"
   // TODO: Perhaps we should make sure gyp-to-cmake produce projects which match the output directory of gyp, to fix 👇
@@ -58,7 +58,7 @@ console.log("Copying files to", EXAMPLES_DIR);
 const require = createRequire(import.meta.url);
 
 const EXAMPLES_PACKAGE_PATH = require.resolve(
-  "node-addon-examples/package.json",
+  "node-addon-examples/package.json"
 );
 const SRC_DIR = path.join(path.dirname(EXAMPLES_PACKAGE_PATH), "src");
 console.log("Copying files from", SRC_DIR);
@@ -73,7 +73,7 @@ for (const src of ALLOW_LIST) {
 
   if (fs.existsSync(destPath)) {
     console.warn(
-      `Destination path ${destPath} already exists - skipping copy of ${src}.`,
+      `Destination path ${destPath} already exists - skipping copy of ${src}.`
     );
     continue;
   }
@@ -84,7 +84,7 @@ for (const src of ALLOW_LIST) {
   // as they have duplicate names, causing collisions when vendored into the host package.
   for (const entry of fs.readdirSync(destPath, {
     withFileTypes: true,
-    recursive: true,
+    recursive: true
   })) {
     if (entry.name === "package.json") {
       const packageJson = readPackageSync({ cwd: entry.parentPath });
@@ -93,7 +93,7 @@ for (const src of ALLOW_LIST) {
       fs.writeFileSync(
         path.join(entry.parentPath, entry.name),
         JSON.stringify(packageJson, null, 2),
-        "utf-8",
+        "utf-8"
       );
     }
   }

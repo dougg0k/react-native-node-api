@@ -4,7 +4,7 @@ import type { Platform } from "./platforms/types.js";
 import {
   findPlatformForTarget,
   platformHasTarget,
-  platforms,
+  platforms
 } from "./platforms.js";
 
 const mockPlatform = { targets: ["target1", "target2"] } as unknown as Platform;

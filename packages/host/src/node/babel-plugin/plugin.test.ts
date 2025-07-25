@@ -15,13 +15,13 @@ type TestTransformationOptions = {
 
 function itTransforms(
   title: string,
-  { files, inputFilePath, assertion, options = {} }: TestTransformationOptions,
+  { files, inputFilePath, assertion, options = {} }: TestTransformationOptions
 ) {
   it(`transforms ${title}`, (context: TestContext) => {
     const tempDirectoryPath = setupTempDirectory(context, files);
     const result = transformFileSync(
       path.join(tempDirectoryPath, inputFilePath),
-      { plugins: [[plugin, options]] },
+      { plugins: [[plugin, options]] }
     );
     assert(result, "Expected transformation to produce a result");
     const { code } = result;
@@ -35,12 +35,12 @@ function assertIncludes(needle: string, { reverse = false } = {}) {
     if (reverse) {
       assert(
         !code.includes(needle),
-        `Expected code to not include: ${needle}, got ${code}`,
+        `Expected code to not include: ${needle}, got ${code}`
       );
     } else {
       assert(
         code.includes(needle),
-        `Expected code to include: ${needle}, got ${code}`,
+        `Expected code to include: ${needle}, got ${code}`
       );
     }
   };
@@ -56,10 +56,10 @@ describe("plugin", () => {
         "index.js": `
           const addon = require('./my-addon.node');
           console.log(addon);
-        `,
+        `
       },
       inputFilePath: "index.js",
-      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`),
+      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`)
     });
 
     itTransforms("from sub-directory", {
@@ -70,10 +70,10 @@ describe("plugin", () => {
         "sub-dir/index.js": `
           const addon = require('../my-addon.node');
           console.log(addon);
-        `,
+        `
       },
       inputFilePath: "sub-dir/index.js",
-      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`),
+      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`)
     });
 
     describe("in 'sub-dir'", () => {
@@ -85,13 +85,13 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('./sub-dir/my-addon.node');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "keep" },
         assertion: assertIncludes(
-          `requireNodeAddon("my-package--sub-dir-my-addon")`,
-        ),
+          `requireNodeAddon("my-package--sub-dir-my-addon")`
+        )
       });
 
       itTransforms("a nested addon (stripping suffix)", {
@@ -102,11 +102,11 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('./sub-dir/my-addon.node');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "strip" },
-        assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`),
+        assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`)
       });
 
       itTransforms("a nested addon (omitting suffix)", {
@@ -117,11 +117,11 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('./sub-dir/my-addon.node');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "omit" },
-        assertion: assertIncludes(`requireNodeAddon("my-package")`),
+        assertion: assertIncludes(`requireNodeAddon("my-package")`)
       });
     });
 
@@ -133,10 +133,10 @@ describe("plugin", () => {
         "index.js": `
           const addon = require('./my-addon');
           console.log(addon);
-        `,
+        `
       },
       inputFilePath: "index.js",
-      assertion: assertIncludes("requireNodeAddon", { reverse: true }),
+      assertion: assertIncludes("requireNodeAddon", { reverse: true })
     });
   });
 
@@ -149,10 +149,10 @@ describe("plugin", () => {
         "index.js": `
           const addon = require('bindings')('my-addon');
           console.log(addon);
-        `,
+        `
       },
       inputFilePath: "index.js",
-      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`),
+      assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`)
     });
 
     describe("in 'build/Release'", () => {
@@ -164,13 +164,13 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('bindings')('my-addon');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "keep" },
         assertion: assertIncludes(
-          `requireNodeAddon("my-package--build-Release-my-addon")`,
-        ),
+          `requireNodeAddon("my-package--build-Release-my-addon")`
+        )
       });
 
       itTransforms("a nested addon (stripping suffix)", {
@@ -181,11 +181,11 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('bindings')('my-addon');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "strip" },
-        assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`),
+        assertion: assertIncludes(`requireNodeAddon("my-package--my-addon")`)
       });
 
       itTransforms("a nested addon (omitting suffix)", {
@@ -196,11 +196,11 @@ describe("plugin", () => {
           "index.js": `
             const addon = require('bindings')('my-addon');
             console.log(addon);
-          `,
+          `
         },
         inputFilePath: "index.js",
         options: { pathSuffix: "omit" },
-        assertion: assertIncludes(`requireNodeAddon("my-package")`),
+        assertion: assertIncludes(`requireNodeAddon("my-package")`)
       });
     });
   });

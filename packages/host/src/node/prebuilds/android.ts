@@ -8,7 +8,7 @@ export const DEFAULT_ANDROID_TRIPLETS = [
   "aarch64-linux-android",
   "armv7a-linux-androideabi",
   "i686-linux-android",
-  "x86_64-linux-android",
+  "x86_64-linux-android"
 ] as const satisfies AndroidTriplet[];
 
 type AndroidArchitecture = "armeabi-v7a" | "arm64-v8a" | "x86" | "x86_64";
@@ -17,7 +17,7 @@ export const ANDROID_ARCHITECTURES = {
   "armv7a-linux-androideabi": "armeabi-v7a",
   "aarch64-linux-android": "arm64-v8a",
   "i686-linux-android": "x86",
-  "x86_64-linux-android": "x86_64",
+  "x86_64-linux-android": "x86_64"
 } satisfies Record<AndroidTriplet, AndroidArchitecture>;
 
 /**
@@ -38,7 +38,7 @@ type AndroidLibsDirectoryOptions = {
 export async function createAndroidLibsDirectory({
   outputPath,
   libraryPathByTriplet,
-  autoLink,
+  autoLink
 }: AndroidLibsDirectoryOptions) {
   // Delete and recreate any existing output directory
   await fs.promises.rm(outputPath, { recursive: true, force: true });
@@ -46,7 +46,7 @@ export async function createAndroidLibsDirectory({
   for (const [triplet, libraryPath] of Object.entries(libraryPathByTriplet)) {
     assert(
       fs.existsSync(libraryPath),
-      `Library not found: ${libraryPath} for triplet ${triplet}`,
+      `Library not found: ${libraryPath} for triplet ${triplet}`
     );
     const arch = ANDROID_ARCHITECTURES[triplet as AndroidTriplet];
     const archOutputPath = path.join(outputPath, arch);
@@ -67,7 +67,7 @@ export async function createAndroidLibsDirectory({
     await fs.promises.writeFile(
       path.join(outputPath, "react-native-node-api-module"),
       "",
-      "utf8",
+      "utf8"
     );
   }
   return outputPath;

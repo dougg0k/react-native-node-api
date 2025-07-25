@@ -7,7 +7,7 @@ describe("bindingGypToCmakeLists", () => {
   it("should declare a project name", () => {
     const output = bindingGypToCmakeLists({
       projectName: "some-project",
-      gyp: { targets: [] },
+      gyp: { targets: [] }
     });
     assert(output.includes("project(some-project)"));
   });
@@ -19,14 +19,14 @@ describe("bindingGypToCmakeLists", () => {
         targets: [
           {
             target_name: "foo",
-            sources: ["foo.cc"],
+            sources: ["foo.cc"]
           },
           {
             target_name: "bar",
-            sources: ["bar.cc"],
-          },
-        ],
-      },
+            sources: ["bar.cc"]
+          }
+        ]
+      }
     });
 
     assert(output.includes("add_library(foo SHARED foo.cc"));
@@ -40,14 +40,14 @@ describe("bindingGypToCmakeLists", () => {
         targets: [
           {
             target_name: "foo",
-            sources: ["file\\with\\win32\\separator.cc"],
-          },
-        ],
-      },
+            sources: ["file\\with\\win32\\separator.cc"]
+          }
+        ]
+      }
     });
 
     assert(
-      output.includes("add_library(foo SHARED file/with/win32/separator.cc"),
+      output.includes("add_library(foo SHARED file/with/win32/separator.cc")
     );
   });
 
@@ -58,10 +58,10 @@ describe("bindingGypToCmakeLists", () => {
         targets: [
           {
             target_name: "foo",
-            sources: ["file with spaces.cc"],
-          },
-        ],
-      },
+            sources: ["file with spaces.cc"]
+          }
+        ]
+      }
     });
 
     assert(output.includes("add_library(foo SHARED file\\ with\\ spaces.cc"));
@@ -75,10 +75,10 @@ describe("bindingGypToCmakeLists", () => {
           targets: [
             {
               target_name: "foo",
-              sources: ["<!echo bar baz"],
-            },
-          ],
-        },
+              sources: ["<!echo bar baz"]
+            }
+          ]
+        }
       });
 
       // Adding \ between bar and baz, as we expect the "bar baz" to be handled like a path with spaces
@@ -92,10 +92,10 @@ describe("bindingGypToCmakeLists", () => {
           targets: [
             {
               target_name: "foo",
-              sources: ["<!@echo bar baz"],
-            },
-          ],
-        },
+              sources: ["<!@echo bar baz"]
+            }
+          ]
+        }
       });
 
       assert(output.includes("add_library(foo SHARED bar baz"));
@@ -111,17 +111,17 @@ describe("bindingGypToCmakeLists", () => {
             {
               target_name: "foo",
               sources: ["foo.cc"],
-              defines: ["FOO", "BAR=value"],
-            },
-          ],
-        },
+              defines: ["FOO", "BAR=value"]
+            }
+          ]
+        }
       });
 
       assert(
         output.includes(
-          "target_compile_definitions(foo PRIVATE FOO BAR=value)",
+          "target_compile_definitions(foo PRIVATE FOO BAR=value)"
         ),
-        `Expected output to include target_compile_definitions:\n${output}`,
+        `Expected output to include target_compile_definitions:\n${output}`
       );
     });
   });

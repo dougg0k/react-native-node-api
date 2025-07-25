@@ -13,9 +13,7 @@ function assertLogs(cb: () => void, expectedMessages: string[]) {
     cb();
     if (expectedMessages.length > 0) {
       errors.push(
-        new Error(
-          `Missing expected message(s): ${expectedMessages.join(", ")}`,
-        ),
+        new Error(`Missing expected message(s): ${expectedMessages.join(", ")}`)
       );
     }
   } finally {
@@ -38,62 +36,62 @@ export const suites: Record<
       assertLogs(
         () =>
           require("../examples/1-getting-started/1_hello_world/napi/hello.js"),
-        ["world"],
+        ["world"]
       ),
     "1_hello_world/node-addon-api": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/1_hello_world/node-addon-api/hello.js"),
-        ["world"],
+        ["world"]
       ),
     "1_hello_world/node-addon-api-addon-class": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/1_hello_world/node-addon-api-addon-class/hello.js"),
-        ["world"],
+        ["world"]
       ),
     "2_function_arguments/napi": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/2_function_arguments/napi/addon.js"),
-        ["This should be eight: 8"],
+        ["This should be eight: 8"]
       ),
     "2_function_arguments/node-addon-api": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/2_function_arguments/node-addon-api/addon.js"),
-        ["This should be eight: 8"],
+        ["This should be eight: 8"]
       ),
     "3_callbacks/napi": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/3_callbacks/napi/addon.js"),
-        ["hello world"],
+        ["hello world"]
       ),
     "3_callbacks/node-addon-api": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/3_callbacks/node-addon-api/addon.js"),
-        ["hello world"],
+        ["hello world"]
       ),
     "4_object_factory/napi": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/4_object_factory/napi/addon.js"),
-        ["hello world"],
+        ["hello world"]
       ),
     "4_object_factory/node-addon-api": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/4_object_factory/node-addon-api/addon.js"),
-        ["hello world"],
+        ["hello world"]
       ),
     "5_function_factory": () =>
       assertLogs(
         () =>
           require("../examples/1-getting-started/5_function_factory/napi/addon.js"),
-        ["hello world"],
-      ),
+        ["hello world"]
+      )
   },
   "5-async-work": {
     // TODO: This crashes (SIGABRT)
@@ -101,6 +99,6 @@ export const suites: Record<
   },
   tests: {
     buffers: () => require("../tests/buffers/addon.js"),
-    async: () => require("../tests/async/addon.js"),
-  },
+    async: () => require("../tests/async/addon.js")
+  }
 };

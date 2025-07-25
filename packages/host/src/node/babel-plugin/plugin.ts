@@ -10,7 +10,7 @@ import {
   getLibraryName,
   isNodeApiModule,
   type NamingStrategy,
-  type PathSuffixChoice,
+  type PathSuffixChoice
 } from "../path-utils";
 
 export type PluginOptions = {
@@ -36,19 +36,19 @@ function assertOptions(opts: unknown): asserts opts is PluginOptions {
 export function replaceWithRequireNodeAddon(
   p: NodePath,
   modulePath: string,
-  naming: NamingStrategy,
+  naming: NamingStrategy
 ) {
   const requireCallArgument = getLibraryName(modulePath, naming);
   p.replaceWith(
     t.callExpression(
       t.memberExpression(
         t.callExpression(t.identifier("require"), [
-          t.stringLiteral("react-native-node-api"),
+          t.stringLiteral("react-native-node-api")
         ]),
-        t.identifier("requireNodeAddon"),
+        t.identifier("requireNodeAddon")
       ),
-      [t.stringLiteral(requireCallArgument)],
-    ),
+      [t.stringLiteral(requireCallArgument)]
+    )
   );
 }
 
@@ -80,7 +80,7 @@ export function plugin(): PluginObj {
               const resolvedPath = findNodeAddonForBindings(id, from);
               if (typeof resolvedPath === "string") {
                 replaceWithRequireNodeAddon(p.parentPath, resolvedPath, {
-                  pathSuffix,
+                  pathSuffix
                 });
               }
             }
@@ -92,7 +92,7 @@ export function plugin(): PluginObj {
             replaceWithRequireNodeAddon(p, relativePath, { pathSuffix });
           }
         }
-      },
-    },
+      }
+    }
   };
 }

@@ -20,7 +20,7 @@ export const APPLE_ARCHITECTURES = {
   // "x86_64-apple-tvos": "x86_64",
   "arm64-apple-tvos-sim": "arm64",
   "arm64-apple-visionos": "arm64",
-  "arm64-apple-visionos-sim": "arm64",
+  "arm64-apple-visionos-sim": "arm64"
 } satisfies Record<AppleTriplet, AppleArchitecture>;
 
 export function createPlistContent(values: Record<string, string>) {
@@ -31,10 +31,10 @@ export function createPlistContent(values: Record<string, string>) {
     "  <dict>",
     ...Object.entries(values).flatMap(([key, value]) => [
       `    <key>${key}</key>`,
-      `    <string>${value}</string>`,
+      `    <string>${value}</string>`
     ]),
     "  </dict>",
-    "</plist>",
+    "</plist>"
   ].join("\n");
 }
 
@@ -50,7 +50,7 @@ export function createAppleFramework(libraryPath: string) {
   const libraryName = path.basename(libraryPath, path.extname(libraryPath));
   const frameworkPath = path.join(
     path.dirname(libraryPath),
-    `${libraryName}.framework`,
+    `${libraryName}.framework`
   );
   // Create the framework from scratch
   fs.rmSync(frameworkPath, { recursive: true, force: true });
@@ -68,9 +68,9 @@ export function createAppleFramework(libraryPath: string) {
       CFBundlePackageType: "FMWK",
       CFBundleShortVersionString: "1.0",
       CFBundleVersion: "1",
-      NSPrincipalClass: "",
+      NSPrincipalClass: ""
     }),
-    "utf8",
+    "utf8"
   );
   const newLibraryPath = path.join(frameworkPath, libraryName);
   // TODO: Consider copying the library instead of renaming it
@@ -79,7 +79,7 @@ export function createAppleFramework(libraryPath: string) {
   cp.spawnSync("install_name_tool", [
     "-id",
     `@rpath/${libraryName}.framework/${libraryName}`,
-    newLibraryPath,
+    newLibraryPath
   ]);
   return frameworkPath;
 }
@@ -87,7 +87,7 @@ export function createAppleFramework(libraryPath: string) {
 export async function createXCframework({
   frameworkPaths,
   outputPath,
-  autoLink,
+  autoLink
 }: XCframeworkOptions) {
   // Delete any existing xcframework to prevent the error:
   // - A library with the identifier 'macos-arm64' already exists.
@@ -106,11 +106,11 @@ export async function createXCframework({
       "-create-xcframework",
       ...frameworkPaths.flatMap((p) => ["-framework", p]),
       "-output",
-      xcodeOutputPath,
+      xcodeOutputPath
     ],
     {
-      outputMode: "buffered",
-    },
+      outputMode: "buffered"
+    }
   );
   if (xcodeOutputPath !== outputPath) {
     // Rename the xcframework to the original output path
@@ -122,7 +122,7 @@ export async function createXCframework({
     fs.writeFileSync(
       path.join(outputPath, "react-native-node-api-module"),
       "",
-      "utf8",
+      "utf8"
     );
   }
 }
@@ -133,7 +133,7 @@ export async function createXCframework({
  */
 export function determineXCFrameworkFilename(
   frameworkPaths: string[],
-  extension: ".xcframework" | ".apple.node" = ".xcframework",
+  extension: ".xcframework" | ".apple.node" = ".xcframework"
 ) {
   const name = determineLibraryBasename(frameworkPaths);
   return `${name}${extension}`;
@@ -144,15 +144,15 @@ export async function createUniversalAppleLibrary(libraryPaths: string[]) {
   const filenames = new Set(libraryPaths.map((p) => path.basename(p)));
   assert(
     filenames.size === 1,
-    "Expected all darwin libraries to have the same name",
+    "Expected all darwin libraries to have the same name"
   );
   const [filename] = filenames;
   const lipoParentPath = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "ferric-lipo-output-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "ferric-lipo-output-"))
   );
   const outputPath = path.join(lipoParentPath, filename);
   await spawn("lipo", ["-create", "-output", outputPath, ...libraryPaths], {
-    outputMode: "buffered",
+    outputMode: "buffered"
   });
   assert(fs.existsSync(outputPath), "Expected lipo output path to exist");
   return outputPath;

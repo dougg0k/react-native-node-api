@@ -6,21 +6,21 @@ import { getLatestMtime, getLibraryName, MAGIC_FILENAME } from "../path-utils";
 import {
   getLinkedModuleOutputPath,
   type LinkModuleOptions,
-  type LinkModuleResult,
+  type LinkModuleResult
 } from "./link-modules";
 
 const ANDROID_ARCHITECTURES = [
   "arm64-v8a",
   "armeabi-v7a",
   "x86_64",
-  "x86",
+  "x86"
 ] as const;
 
 export async function linkAndroidDir({
   incremental,
   modulePath,
   naming,
-  platform,
+  platform
 }: LinkModuleOptions): Promise<LinkModuleResult> {
   const libraryName = getLibraryName(modulePath, naming);
   const outputPath = getLinkedModuleOutputPath(platform, modulePath, naming);
@@ -33,7 +33,7 @@ export async function linkAndroidDir({
         originalPath: modulePath,
         libraryName,
         outputPath,
-        skipped: true,
+        skipped: true
       };
     }
   }
@@ -47,7 +47,7 @@ export async function linkAndroidDir({
       continue;
     }
     const libraryDirents = await fs.promises.readdir(archPath, {
-      withFileTypes: true,
+      withFileTypes: true
     });
     assert(libraryDirents.length === 1, "Expected exactly one library file");
     const [libraryDirent] = libraryDirents;
@@ -55,11 +55,11 @@ export async function linkAndroidDir({
     const libraryPath = path.join(libraryDirent.parentPath, libraryDirent.name);
     await fs.promises.rename(
       libraryPath,
-      path.join(archPath, `lib${libraryName}.so`),
+      path.join(archPath, `lib${libraryName}.so`)
     );
   }
   await fs.promises.rm(path.join(outputPath, MAGIC_FILENAME), {
-    recursive: true,
+    recursive: true
   });
 
   // TODO: Update the DT_NEEDED entry in the .so files
@@ -68,6 +68,6 @@ export async function linkAndroidDir({
     originalPath: modulePath,
     outputPath,
     libraryName,
-    skipped: false,
+    skipped: false
   };
 }

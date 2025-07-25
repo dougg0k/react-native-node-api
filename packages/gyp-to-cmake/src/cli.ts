@@ -5,7 +5,7 @@ import { Command } from "@commander-js/extra-typings";
 import { readBindingFile } from "./gyp.js";
 import {
   bindingGypToCmakeLists,
-  type GypToCmakeListsOptions,
+  type GypToCmakeListsOptions
 } from "./transformer.js";
 
 export type TransformOptions = Omit<
@@ -26,7 +26,7 @@ export function transformBindingGypFile(
     disallowUnknownProperties,
     projectName = generateProjectName(gypPath),
     ...restOfOptions
-  }: TransformOptions,
+  }: TransformOptions
 ) {
   console.log("Transforming", gypPath);
   const gyp = readBindingFile(gypPath, disallowUnknownProperties);
@@ -34,7 +34,7 @@ export function transformBindingGypFile(
   const result = bindingGypToCmakeLists({
     gyp,
     projectName,
-    ...restOfOptions,
+    ...restOfOptions
   });
   const cmakeListsPath = path.join(parentPath, "CMakeLists.txt");
   fs.writeFileSync(cmakeListsPath, result, "utf-8");
@@ -42,7 +42,7 @@ export function transformBindingGypFile(
 
 export function transformBindingGypsRecursively(
   directoryPath: string,
-  options: TransformOptions,
+  options: TransformOptions
 ) {
   const entries = fs.readdirSync(directoryPath, { withFileTypes: true });
   for (const entry of entries) {
@@ -59,18 +59,18 @@ export const program = new Command("gyp-to-cmake")
   .description("Transform binding.gyp to CMakeLists.txt")
   .option(
     "--no-path-transforms",
-    "Don't transform output from command expansions (replacing '\\' with '/')",
+    "Don't transform output from command expansions (replacing '\\' with '/')"
   )
   .argument(
     "[path]",
     "Path to the binding.gyp file or directory to traverse recursively",
-    process.cwd(),
+    process.cwd()
   )
   .action((targetPath: string, { pathTransforms }) => {
     const options: TransformOptions = {
       unsupportedBehaviour: "throw",
       disallowUnknownProperties: false,
-      transformWinPathsToPosix: pathTransforms,
+      transformWinPathsToPosix: pathTransforms
     };
     const stat = fs.statSync(targetPath);
     if (stat.isFile()) {

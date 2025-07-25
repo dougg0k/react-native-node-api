@@ -26,9 +26,9 @@ describe("gyp.assertRoot", () => {
     assert.throws(() => {
       assertBinding(
         {
-          targets: [{ target_name: "", sources: [], extra: "not allowed" }],
+          targets: [{ target_name: "", sources: [], extra: "not allowed" }]
         },
-        true,
+        true
       );
     }, /Unexpected property: extra/);
   });

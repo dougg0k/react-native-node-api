@@ -7,7 +7,7 @@ export const ANDROID_TARGETS = [
   "aarch64-linux-android",
   "armv7-linux-androideabi",
   "i686-linux-android",
-  "x86_64-linux-android",
+  "x86_64-linux-android"
   // "arm-linux-androideabi",
   // "thumbv7neon-linux-androideabi",
 ] as const;
@@ -19,7 +19,7 @@ export const APPLE_TARGETS = [
   "aarch64-apple-darwin",
   "x86_64-apple-darwin",
   "aarch64-apple-ios",
-  "aarch64-apple-ios-sim",
+  "aarch64-apple-ios-sim"
   // "aarch64-apple-ios-macabi", // Catalyst
   // "x86_64-apple-ios",
   // "x86_64-apple-ios-macabi", // Catalyst
@@ -58,7 +58,7 @@ export type TargetName = (typeof ALL_TARGETS)[number];
 export function ensureInstalledTargets(expectedTargets: Set<TargetName>) {
   const installedTargets = getInstalledTargets();
   const missingTargets = new Set([
-    ...[...expectedTargets].filter((target) => !installedTargets.has(target)),
+    ...[...expectedTargets].filter((target) => !installedTargets.has(target))
   ]);
   if (missingTargets.size > 0) {
     // TODO: Ask the user if they want to run this
@@ -66,14 +66,14 @@ export function ensureInstalledTargets(expectedTargets: Set<TargetName>) {
       `You're missing ${
         missingTargets.size
       } targets - to fix this, run:\n\n${chalk.italic(
-        `rustup target add ${[...missingTargets].join(" ")}`,
-      )}`,
+        `rustup target add ${[...missingTargets].join(" ")}`
+      )}`
     );
   }
 }
 
 export function isAndroidTarget(
-  target: TargetName,
+  target: TargetName
 ): target is AndroidTargetName {
   return ANDROID_TARGETS.includes(target as (typeof ANDROID_TARGETS)[number]);
 }
@@ -84,15 +84,15 @@ export function isAppleTarget(target: TargetName): target is AppleTargetName {
 
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "android",
+  platform: "android"
 ): AndroidTargetName[];
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "apple",
+  platform: "apple"
 ): AppleTargetName[];
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "apple" | "android",
+  platform: "apple" | "android"
 ) {
   if (platform === "android") {
     return [...targets].filter(isAndroidTarget);

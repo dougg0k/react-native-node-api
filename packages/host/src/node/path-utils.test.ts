@@ -12,7 +12,7 @@ import {
   findPackageDependencyPaths,
   getLibraryName,
   isNodeApiModule,
-  stripExtension,
+  stripExtension
 } from "./path-utils.js";
 import { setupTempDirectory } from "./test-utils.js";
 
@@ -27,7 +27,7 @@ function removeReadPermissions(p: string) {
   const attributes = {
     IS_READ_ONLY: true,
     IS_OFFLINE: true,
-    IS_TEMPORARY: true,
+    IS_TEMPORARY: true
   };
 
   const result = fswin.setAttributesSync(p, attributes);
@@ -45,7 +45,7 @@ function restoreReadPermissions(p: string) {
   const attributes = {
     IS_READ_ONLY: false,
     IS_OFFLINE: false,
-    IS_TEMPORARY: false,
+    IS_TEMPORARY: false
   };
 
   const result = fswin.setAttributesSync(p, attributes);
@@ -56,7 +56,7 @@ function restoreReadPermissions(p: string) {
 describe("isNodeApiModule", () => {
   it("returns true for .node", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
-      "addon.apple.node/addon.node": "// This is supposted to be a binary file",
+      "addon.apple.node/addon.node": "// This is supposted to be a binary file"
     });
 
     assert(isNodeApiModule(path.join(tempDirectoryPath, "addon")));
@@ -69,30 +69,30 @@ describe("isNodeApiModule", () => {
     { skip: process.platform === "win32" },
     (context) => {
       const tempDirectoryPath = setupTempDirectory(context, {
-        "addon.android.node": "",
+        "addon.android.node": ""
       });
       removeReadPermissions(tempDirectoryPath);
       try {
         assert.equal(
           isNodeApiModule(path.join(tempDirectoryPath, "addon")),
-          false,
+          false
         );
       } finally {
         restoreReadPermissions(tempDirectoryPath);
       }
-    },
+    }
   );
 
   it("throws when module file exists but is not readable", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
-      "addon.android.node": "",
+      "addon.android.node": ""
     });
     const candidate = path.join(tempDirectoryPath, "addon.android.node");
     removeReadPermissions(candidate);
     try {
       assert.throws(
         () => isNodeApiModule(path.join(tempDirectoryPath, "addon")),
-        /Found an unreadable module addon\.android\.node/,
+        /Found an unreadable module addon\.android\.node/
       );
     } finally {
       restoreReadPermissions(candidate);
@@ -107,12 +107,12 @@ describe("isNodeApiModule", () => {
 
   it("recognize .apple.node directories", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
-      "addon.apple.node/addon.node": "// This is supposed to be a binary file",
+      "addon.apple.node/addon.node": "// This is supposed to be a binary file"
     });
     assert.equal(isNodeApiModule(path.join(tempDirectoryPath, "addon")), true);
     assert.equal(
       isNodeApiModule(path.join(tempDirectoryPath, "addon.node")),
-      true,
+      true
     );
     assert.equal(isNodeApiModule(path.join(tempDirectoryPath, "nope")), false);
   });
@@ -120,14 +120,14 @@ describe("isNodeApiModule", () => {
   it("throws when one module unreadable but another readable", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
       "addon.android.node": "",
-      "addon.apple.node": "",
+      "addon.apple.node": ""
     });
     const unreadable = path.join(tempDirectoryPath, "addon.android.node");
     // only android module is unreadable
     removeReadPermissions(unreadable);
     assert.throws(
       () => isNodeApiModule(path.join(tempDirectoryPath, "addon")),
-      /Found an unreadable module addon\.android\.node/,
+      /Found an unreadable module addon\.android\.node/
     );
     restoreReadPermissions(unreadable);
   });
@@ -146,12 +146,12 @@ describe("stripExtension", () => {
 describe("determineModuleContext", () => {
   it("strips the file extension", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
-      "package.json": `{ "name": "my-package" }`,
+      "package.json": `{ "name": "my-package" }`
     });
 
     {
       const { packageName, relativePath } = determineModuleContext(
-        path.join(tempDirectoryPath, "some-dir/some-file.node"),
+        path.join(tempDirectoryPath, "some-dir/some-file.node")
       );
       assert.equal(packageName, "my-package");
       assert.equal(relativePath, "some-dir/some-file");
@@ -160,12 +160,12 @@ describe("determineModuleContext", () => {
 
   it("strips a lib prefix", (context) => {
     const tempDirectoryPath = setupTempDirectory(context, {
-      "package.json": `{ "name": "my-package" }`,
+      "package.json": `{ "name": "my-package" }`
     });
 
     {
       const { packageName, relativePath } = determineModuleContext(
-        path.join(tempDirectoryPath, "some-dir/libsome-file.node"),
+        path.join(tempDirectoryPath, "some-dir/libsome-file.node")
       );
       assert.equal(packageName, "my-package");
       assert.equal(relativePath, "some-dir/some-file");
@@ -177,12 +177,12 @@ describe("determineModuleContext", () => {
       "package.json": `{ "name": "root-package" }`,
       // Two sub-packages with the same name
       "sub-package-a/package.json": `{ "name": "my-sub-package-a" }`,
-      "sub-package-b/package.json": `{ "name": "my-sub-package-b" }`,
+      "sub-package-b/package.json": `{ "name": "my-sub-package-b" }`
     });
 
     {
       const { packageName, relativePath } = determineModuleContext(
-        path.join(tempDirectoryPath, "sub-package-a/some-file.node"),
+        path.join(tempDirectoryPath, "sub-package-a/some-file.node")
       );
       assert.equal(packageName, "my-sub-package-a");
       assert.equal(relativePath, "some-file");
@@ -190,7 +190,7 @@ describe("determineModuleContext", () => {
 
     {
       const { packageName, relativePath } = determineModuleContext(
-        path.join(tempDirectoryPath, "sub-package-b/some-file.node"),
+        path.join(tempDirectoryPath, "sub-package-b/some-file.node")
       );
       assert.equal(packageName, "my-sub-package-b");
       assert.equal(relativePath, "some-file");
@@ -204,20 +204,20 @@ describe("getLibraryName", () => {
       "package.json": `{ "name": "my-package" }`,
       "addon.apple.node/addon.node": "// This is supposed to be a binary file",
       "sub-directory/addon.apple.node/addon.node":
-        "// This is supposed to be a binary file",
+        "// This is supposed to be a binary file"
     });
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "addon"), {
-        pathSuffix: "keep",
+        pathSuffix: "keep"
       }),
-      "my-package--addon",
+      "my-package--addon"
     );
 
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "sub-directory/addon"), {
-        pathSuffix: "keep",
+        pathSuffix: "keep"
       }),
-      "my-package--sub-directory-addon",
+      "my-package--sub-directory-addon"
     );
   });
 
@@ -226,20 +226,20 @@ describe("getLibraryName", () => {
       "package.json": `{ "name": "my-package" }`,
       "addon.apple.node/addon.node": "// This is supposed to be a binary file",
       "sub-directory/addon.apple.node/addon.node":
-        "// This is supposed to be a binary file",
+        "// This is supposed to be a binary file"
     });
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "addon"), {
-        pathSuffix: "strip",
+        pathSuffix: "strip"
       }),
-      "my-package--addon",
+      "my-package--addon"
     );
 
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "sub-directory", "addon"), {
-        pathSuffix: "strip",
+        pathSuffix: "strip"
       }),
-      "my-package--addon",
+      "my-package--addon"
     );
   });
 
@@ -248,20 +248,20 @@ describe("getLibraryName", () => {
       "package.json": `{ "name": "my-package" }`,
       "addon.apple.node/addon.node": "// This is supposed to be a binary file",
       "sub-directory/addon.apple.node/addon.node":
-        "// This is supposed to be a binary file",
+        "// This is supposed to be a binary file"
     });
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "addon"), {
-        pathSuffix: "omit",
+        pathSuffix: "omit"
       }),
-      "my-package",
+      "my-package"
     );
 
     assert.equal(
       getLibraryName(path.join(tempDirectoryPath, "sub-directory", "addon"), {
-        pathSuffix: "omit",
+        pathSuffix: "omit"
       }),
-      "my-package",
+      "my-package"
     );
   });
 });
@@ -272,36 +272,36 @@ describe("findPackageDependencyPaths", () => {
       "node_modules/lib-a": {
         "package.json": JSON.stringify({
           name: "lib-a",
-          main: "index.js",
+          main: "index.js"
         }),
-        "index.js": "",
+        "index.js": ""
       },
       "test-package": {
         "package.json": JSON.stringify({
           name: "test-package",
           dependencies: {
             "lib-a": "^1.0.0",
-            "lib-b": "^1.0.0",
-          },
+            "lib-b": "^1.0.0"
+          }
         }),
         "src/index.js": "console.log('Hello, world!')",
         "node_modules/lib-b": {
           "package.json": JSON.stringify({
             name: "lib-b",
-            main: "index.js",
+            main: "index.js"
           }),
-          "index.js": "",
-        },
-      },
+          "index.js": ""
+        }
+      }
     });
 
     const result = findPackageDependencyPaths(
-      path.join(tempDir, "test-package/src/index.js"),
+      path.join(tempDir, "test-package/src/index.js")
     );
 
     assert.deepEqual(result, {
       "lib-a": path.join(tempDir, "node_modules/lib-a"),
-      "lib-b": path.join(tempDir, "test-package/node_modules/lib-b"),
+      "lib-b": path.join(tempDir, "test-package/node_modules/lib-b")
     });
   });
 });
@@ -311,16 +311,16 @@ describe("findNodeApiModulePaths", () => {
     const tempDir = setupTempDirectory(context, {
       "root.apple.node/react-native-node-api-module": "",
       "sub-directory/lib-a.apple.node/react-native-node-api-module": "",
-      "sub-directory/lib-b.apple.node/react-native-node-api-module": "",
+      "sub-directory/lib-b.apple.node/react-native-node-api-module": ""
     });
     const result = await findNodeApiModulePaths({
       fromPath: tempDir,
-      platform: "apple",
+      platform: "apple"
     });
     assert.deepEqual(result.sort(), [
       path.join(tempDir, "root.apple.node"),
       path.join(tempDir, "sub-directory/lib-a.apple.node"),
-      path.join(tempDir, "sub-directory/lib-b.apple.node"),
+      path.join(tempDir, "sub-directory/lib-b.apple.node")
     ]);
   });
 
@@ -330,15 +330,15 @@ describe("findNodeApiModulePaths", () => {
       "node_modules/dependency/lib.apple.node/react-native-node-api-module": "",
       "child-dir/dependency/lib.apple.node/react-native-node-api-module": "",
       "child-dir/node_modules/dependency/lib.apple.node/react-native-node-api-module":
-        "",
+        ""
     });
     const result = await findNodeApiModulePaths({
       fromPath: tempDir,
-      platform: "apple",
+      platform: "apple"
     });
     assert.deepEqual(result.sort(), [
       path.join(tempDir, "child-dir/dependency/lib.apple.node"),
-      path.join(tempDir, "root.apple.node"),
+      path.join(tempDir, "root.apple.node")
     ]);
   });
 
@@ -347,16 +347,16 @@ describe("findNodeApiModulePaths", () => {
       "root.apple.node/react-native-node-api-module": "",
       "child-dir/dependency/lib.apple.node/react-native-node-api-module": "",
       "child-dir/node_modules/dependency/lib.apple.node/react-native-node-api-module":
-        "",
+        ""
     });
     const result = await findNodeApiModulePaths({
       fromPath: tempDir,
       platform: "apple",
-      excludePatterns: [/root/],
+      excludePatterns: [/root/]
     });
     assert.deepEqual(result.sort(), [
       path.join(tempDir, "child-dir/dependency/lib.apple.node"),
-      path.join(tempDir, "child-dir/node_modules/dependency/lib.apple.node"),
+      path.join(tempDir, "child-dir/node_modules/dependency/lib.apple.node")
     ]);
   });
 
@@ -364,14 +364,14 @@ describe("findNodeApiModulePaths", () => {
     const tempDir = setupTempDirectory(context, {
       "node_modules/root.apple.node/react-native-node-api-module": "",
       "node_modules/child-dir/node_modules/dependency/lib.apple.node/react-native-node-api-module":
-        "",
+        ""
     });
     const result = await findNodeApiModulePaths({
       fromPath: path.join(tempDir, "node_modules"),
-      platform: "apple",
+      platform: "apple"
     });
     assert.deepEqual(result, [
-      path.join(tempDir, "node_modules/root.apple.node"),
+      path.join(tempDir, "node_modules/root.apple.node")
     ]);
   });
 
@@ -381,20 +381,20 @@ describe("findNodeApiModulePaths", () => {
     { skip: process.platform === "win32" },
     async (context) => {
       const tempDir = setupTempDirectory(context, {
-        "addon.apple.node/react-native-node-api-module": "",
+        "addon.apple.node/react-native-node-api-module": ""
       });
 
       removeReadPermissions(tempDir);
       try {
         const result = findNodeApiModulePaths({
           fromPath: tempDir,
-          platform: "apple",
+          platform: "apple"
         });
         assert.deepEqual(await result, []);
       } finally {
         restoreReadPermissions(tempDir);
       }
-    },
+    }
   );
 });
 
@@ -405,8 +405,8 @@ describe("findNodeApiModulePathsByDependency", () => {
       "app/package.json": JSON.stringify({
         name: "app",
         dependencies: Object.fromEntries(
-          packagesNames.map((packageName) => [packageName, "^1.0.0"]),
-        ),
+          packagesNames.map((packageName) => [packageName, "^1.0.0"])
+        )
       }),
       ...Object.fromEntries(
         packagesNames.map((packageName) => [
@@ -414,30 +414,30 @@ describe("findNodeApiModulePathsByDependency", () => {
           {
             "package.json": JSON.stringify({
               name: packageName,
-              main: "index.js",
+              main: "index.js"
             }),
             "index.js": "",
-            "addon.apple.node/react-native-node-api-module": "",
-          },
-        ]),
-      ),
+            "addon.apple.node/react-native-node-api-module": ""
+          }
+        ])
+      )
     });
 
     const result = await findNodeApiModulePathsByDependency({
       fromPath: path.join(tempDir, "app"),
       platform: "apple",
       includeSelf: false,
-      excludePackages: ["lib-a"],
+      excludePackages: ["lib-a"]
     });
     assert.deepEqual(result, {
       "lib-b": {
         path: path.join(tempDir, "app/node_modules/lib-b"),
-        modulePaths: ["addon.apple.node"],
+        modulePaths: ["addon.apple.node"]
       },
       "lib-c": {
         path: path.join(tempDir, "app/node_modules/lib-c"),
-        modulePaths: ["addon.apple.node"],
-      },
+        modulePaths: ["addon.apple.node"]
+      }
     });
   });
 });
@@ -448,7 +448,7 @@ describe("determineModuleContext", () => {
       "package.json": `{ "name": "cached-pkg" }`,
       "subdir1/file1.node": "",
       "subdir2/file2.node": "",
-      "subdir1/file1.apple.node": "",
+      "subdir1/file1.apple.node": ""
     });
     let readCount = 0;
     const orig = fs.readFileSync;
@@ -461,14 +461,14 @@ describe("determineModuleContext", () => {
           readCount++;
         }
         return orig(...args);
-      },
+      }
     );
 
     const ctx1 = determineModuleContext(
-      path.join(tempDir, "subdir1/file1.node"),
+      path.join(tempDir, "subdir1/file1.node")
     );
     const ctx2 = determineModuleContext(
-      path.join(tempDir, "subdir2/file2.node"),
+      path.join(tempDir, "subdir2/file2.node")
     );
     assert.equal(ctx1.packageName, "cached-pkg");
     assert.equal(ctx2.packageName, "cached-pkg");
@@ -485,19 +485,19 @@ describe("findNodeAddonForBindings()", () => {
     addon_5: "out/Release/addon_5.node",
     addon_6: "out/Debug/addon_6.node",
     addon_7: "Release/addon_7.node",
-    addon_8: "Debug/addon_8.node",
+    addon_8: "Debug/addon_8.node"
   };
 
   for (const [name, relPath] of Object.entries(expectedPaths)) {
     it(`should look for addons in common paths (${name} in "${relPath}")`, async (context) => {
       // Arrange
       const tempDirectoryPath = setupTempDirectory(context, {
-        [relPath]: "// This is supposed to be a binary file",
+        [relPath]: "// This is supposed to be a binary file"
       });
       // Act
       const actualPath = await findNodeAddonForBindings(
         name,
-        tempDirectoryPath,
+        tempDirectoryPath
       );
       // Assert
       const expectedAbsPath = path.join(tempDirectoryPath, relPath);

@@ -1,7 +1,7 @@
 module.exports = {
   dependency: {
     platforms: {
-      android: {},
-    },
-  },
+      android: {}
+    }
+  }
 };

@@ -3,7 +3,7 @@ import {
   ConnectionText,
   MochaRemoteProvider,
   StatusEmoji,
-  StatusText,
+  StatusText
 } from "mocha-remote-react-native";
 // biome-ignore lint/correctness/noUnusedImports: Keep React
 import React from "react";
@@ -12,7 +12,7 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 function describeIf(
   condition: boolean,
   title: string,
-  fn: (this: Mocha.Suite) => void,
+  fn: (this: Mocha.Suite) => void
 ) {
   return condition ? describe(title, fn) : describe.skip(title, fn);
 }
@@ -26,11 +26,11 @@ type Context = {
 function loadTests({
   allTests = false,
   nodeAddonExamples = allTests,
-  ferricExample = allTests,
+  ferricExample = allTests
 }: Context) {
   describeIf(nodeAddonExamples, "Node Addon Examples", () => {
     for (const [suiteName, examples] of Object.entries(
-      nodeAddonExamplesSuites,
+      nodeAddonExamplesSuites
     )) {
       describe(suiteName, () => {
         for (const [exampleName, requireExample] of Object.entries(examples)) {
@@ -74,24 +74,24 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   statusContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   statusEmoji: {
     fontSize: 30,
     margin: 30,
-    textAlign: "center",
+    textAlign: "center"
   },
   statusText: {
     fontSize: 20,
     margin: 20,
-    textAlign: "center",
+    textAlign: "center"
   },
   connectionText: {
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });

@@ -3,19 +3,19 @@ const project = (() => {
     const { configureProjects } = require("react-native-test-app");
     const project = configureProjects({
       android: {
-        sourceDir: "android",
+        sourceDir: "android"
       },
       ios: {
         sourceDir: "ios",
-        automaticPodsInstallation: false,
-      },
+        automaticPodsInstallation: false
+      }
       // windows: {
       //   sourceDir: "windows",
       //   solutionFile: "windows/react-native-node-api-example.sln",
       // },
     });
     return {
-      ...project,
+      ...project
     };
   } catch {
     return undefined;
@@ -23,5 +23,5 @@ const project = (() => {
 })();
 
 module.exports = {
-  ...(project ? { project } : undefined),
+  ...(project ? { project } : undefined)
 };

@@ -33,7 +33,7 @@ export function bindingGypToCmakeLists({
   napiVersion = DEFAULT_NAPI_VERSION,
   executeCmdExpansions = true,
   unsupportedBehaviour = "skip",
-  transformWinPathsToPosix = true,
+  transformWinPathsToPosix = true
 }: GypToCmakeListsOptions): string {
   function mapExpansion(value: string): string[] {
     if (!isCmdExpansion(value)) {
@@ -66,7 +66,7 @@ export function bindingGypToCmakeLists({
     `project(${projectName})`,
     "",
     // Declaring a project-wide NAPI_VERSION as a fallback for targets that don't explicitly set it
-    `add_compile_definitions(NAPI_VERSION=${napiVersion})`,
+    `add_compile_definitions(NAPI_VERSION=${napiVersion})`
   ];
 
   for (const target of gyp.targets) {
@@ -103,9 +103,9 @@ export function bindingGypToCmakeLists({
       `target_compile_features(${targetName} PRIVATE cxx_std_17)`,
       ...(escapedJoinedDefines
         ? [
-            `target_compile_definitions(${targetName} PRIVATE ${escapedJoinedDefines})`,
+            `target_compile_definitions(${targetName} PRIVATE ${escapedJoinedDefines})`
           ]
-        : []),
+        : [])
       // or
       // `set_target_properties(${targetName} PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)`,
     );
@@ -117,7 +117,7 @@ export function bindingGypToCmakeLists({
     "if(MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)",
     "  # Generate node.lib",
     "  execute_process(COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})",
-    "endif()",
+    "endif()"
   );
 
   return lines.join("\n");

@@ -12,8 +12,8 @@ for (const projectDirectory of projectDirectories) {
     // "cmake-rn --triplet aarch64-linux-android --triplet arm64-apple-ios-sim",
     {
       cwd: projectDirectory,
-      stdio: "inherit",
-    },
+      stdio: "inherit"
+    }
   );
   console.log();
 }

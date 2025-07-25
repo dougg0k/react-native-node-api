@@ -21,11 +21,11 @@ export function generateHeader(functions: FunctionDecl[]) {
       ({ returnType, noReturn, name, argumentTypes }) =>
         `${returnType} ${
           noReturn ? " __attribute__((noreturn))" : ""
-        }(*${name})(${argumentTypes.join(", ")});`,
+        }(*${name})(${argumentTypes.join(", ")});`
     ),
     "};",
     "typedef void(*InjectHostFunction)(const WeakNodeApiHost&);",
-    `extern "C" void inject_weak_node_api_host(const WeakNodeApiHost& host);`,
+    `extern "C" void inject_weak_node_api_host(const WeakNodeApiHost& host);`
   ].join("\n");
 }
 
@@ -60,9 +60,9 @@ export function generateSource(functions: FunctionDecl[]) {
           "(" +
           argumentTypes.map((_, index) => `arg${index}`).join(", ") +
           ");",
-        "};",
+        "};"
       ];
-    }),
+    })
   ].join("\n");
 }
 

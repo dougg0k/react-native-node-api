@@ -13,7 +13,7 @@ import {
   allTargets,
   findPlatformForTarget,
   platformHasTarget,
-  platforms,
+  platforms
 } from "./platforms.js";
 import { getWeakNodeApiVariables } from "./weak-node-api.js";
 
@@ -24,12 +24,12 @@ EventEmitter.defaultMaxListeners = 100;
 
 const verboseOption = new Option(
   "--verbose",
-  "Print more output during the build",
+  "Print more output during the build"
 ).default(process.env.CI === "true");
 
 const sourcePathOption = new Option(
   "--source <path>",
-  "Specify the source directory containing a CMakeLists.txt file",
+  "Specify the source directory containing a CMakeLists.txt file"
 ).default(process.cwd());
 
 // TODO: Add "MinSizeRel" and "RelWithDebInfo"
@@ -47,7 +47,7 @@ const defaultTargets = CMAKE_RN_TARGETS ? CMAKE_RN_TARGETS.split(",") : [];
 for (const target of defaultTargets) {
   assert(
     (allTargets as string[]).includes(target),
-    `Unexpected target in CMAKE_RN_TARGETS: ${target}`,
+    `Unexpected target in CMAKE_RN_TARGETS: ${target}`
   );
 }
 
@@ -55,32 +55,32 @@ const targetOption = new Option("--target <target...>", "Targets to build for")
   .choices(allTargets)
   .default(
     defaultTargets,
-    "CMAKE_RN_TARGETS environment variable split by ','",
+    "CMAKE_RN_TARGETS environment variable split by ','"
   );
 
 const buildPathOption = new Option(
   "--build <path>",
-  "Specify the build directory to store the configured CMake project",
+  "Specify the build directory to store the configured CMake project"
 );
 
 const cleanOption = new Option(
   "--clean",
-  "Delete the build directory before configuring the project",
+  "Delete the build directory before configuring the project"
 );
 
 const outPathOption = new Option(
   "--out <path>",
-  "Specify the output directory to store the final build artifacts",
+  "Specify the output directory to store the final build artifacts"
 ).default(false, "./{build}/{configuration}");
 
 const noAutoLinkOption = new Option(
   "--no-auto-link",
-  "Don't mark the output as auto-linkable by react-native-node-api",
+  "Don't mark the output as auto-linkable by react-native-node-api"
 );
 
 const noWeakNodeApiLinkageOption = new Option(
   "--no-weak-node-api-linkage",
-  "Don't pass the path of the weak-node-api library from react-native-node-api",
+  "Don't pass the path of the weak-node-api library from react-native-node-api"
 );
 
 let program = new Command("cmake-rn")
@@ -98,7 +98,7 @@ let program = new Command("cmake-rn")
 for (const platform of platforms) {
   const allOption = new Option(
     `--${platform.id}`,
-    `Enable all ${platform.name} triplets`,
+    `Enable all ${platform.name} triplets`
   );
   program = program.addOption(allOption);
   program = platform.amendCommand(program);
@@ -132,13 +132,13 @@ program = program.action(
         }
         if (targets.size === 0) {
           throw new Error(
-            "Found no default targets: Install some platform specific build tools",
+            "Found no default targets: Install some platform specific build tools"
           );
         } else {
           console.error(
             chalk.yellowBright("ℹ"),
             "Using default targets",
-            chalk.dim(`(${[...targets].join(", ")})`),
+            chalk.dim(`(${[...targets].join(", ")})`)
           );
         }
       }
@@ -155,26 +155,26 @@ program = program.action(
           platform,
           buildPath: targetBuildPath,
           outputPath: path.join(targetBuildPath, "out"),
-          options: baseOptions,
+          options: baseOptions
         };
       });
 
       // Configure every triplet project
       const targetsSummary = chalk.dim(
-        `(${getTargetsSummary(targetContexts)})`,
+        `(${getTargetsSummary(targetContexts)})`
       );
       await oraPromise(
         Promise.all(
           targetContexts.map(({ platform, ...context }) =>
-            configureProject(platform, context, baseOptions),
-          ),
+            configureProject(platform, context, baseOptions)
+          )
         ),
         {
           text: `Configuring projects ${targetsSummary}`,
           isSilent: baseOptions.verbose,
           successText: `Configured projects ${targetsSummary}`,
-          failText: ({ message }) => `Failed to configure projects: ${message}`,
-        },
+          failText: ({ message }) => `Failed to configure projects: ${message}`
+        }
       );
 
       // Build every triplet project
@@ -185,23 +185,23 @@ program = program.action(
             // This is important, since we might rename the output files
             await fs.promises.rm(context.outputPath, {
               recursive: true,
-              force: true,
+              force: true
             });
             await buildProject(platform, context, baseOptions);
-          }),
+          })
         ),
         {
           text: "Building projects",
           isSilent: baseOptions.verbose,
           successText: "Built projects",
-          failText: ({ message }) => `Failed to build projects: ${message}`,
-        },
+          failText: ({ message }) => `Failed to build projects: ${message}`
+        }
       );
 
       // Perform post-build steps for each platform in sequence
       for (const platform of platforms) {
         const relevantTargets = targetContexts.filter(({ target }) =>
-          platformHasTarget(platform, target),
+          platformHasTarget(platform, target)
         );
         if (relevantTargets.length === 0) {
           continue;
@@ -209,9 +209,9 @@ program = program.action(
         await platform.postBuild(
           {
             outputPath: baseOptions.out || baseOptions.source,
-            targets: relevantTargets,
+            targets: relevantTargets
           },
-          baseOptions,
+          baseOptions
         );
       }
     } catch (error) {
@@ -220,11 +220,11 @@ program = program.action(
       }
       throw error;
     }
-  },
+  }
 );
 
 function getTargetsSummary(
-  targetContexts: { target: string; platform: Platform }[],
+  targetContexts: { target: string; platform: Platform }[]
 ) {
   const targetsPerPlatform: Record<string, string[]> = {};
   for (const { target, platform } of targetContexts) {
@@ -256,7 +256,7 @@ function getTargetBuildPath(buildPath: string, target: unknown) {
 async function configureProject<T extends string>(
   platform: Platform<T[], Record<string, unknown>>,
   context: TargetContext<T>,
-  options: BaseOpts,
+  options: BaseOpts
 ) {
   const { target, buildPath, outputPath } = context;
   const { verbose, source, weakNodeApiLinkage } = options;
@@ -269,7 +269,7 @@ async function configureProject<T extends string>(
 
   const declarations = {
     ...nodeApiVariables,
-    CMAKE_LIBRARY_OUTPUT_DIRECTORY: outputPath,
+    CMAKE_LIBRARY_OUTPUT_DIRECTORY: outputPath
   };
 
   await spawn(
@@ -280,19 +280,19 @@ async function configureProject<T extends string>(
       "-B",
       buildPath,
       ...platform.configureArgs(context, options),
-      ...toDeclarationArguments(declarations),
+      ...toDeclarationArguments(declarations)
     ],
     {
       outputMode: verbose ? "inherit" : "buffered",
-      outputPrefix: verbose ? chalk.dim(`[${target}] `) : undefined,
-    },
+      outputPrefix: verbose ? chalk.dim(`[${target}] `) : undefined
+    }
   );
 }
 
 async function buildProject<T extends string>(
   platform: Platform<T[], Record<string, unknown>>,
   context: TargetContext<T>,
-  options: BaseOpts,
+  options: BaseOpts
 ) {
   const { target, buildPath } = context;
   const { verbose, configuration } = options;
@@ -304,19 +304,19 @@ async function buildProject<T extends string>(
       "--config",
       configuration,
       "--",
-      ...platform.buildArgs(context, options),
+      ...platform.buildArgs(context, options)
     ],
     {
       outputMode: verbose ? "inherit" : "buffered",
-      outputPrefix: verbose ? chalk.dim(`[${target}] `) : undefined,
-    },
+      outputPrefix: verbose ? chalk.dim(`[${target}] `) : undefined
+    }
   );
 }
 
 function toDeclarationArguments(declarations: Record<string, string>) {
   return Object.entries(declarations).flatMap(([key, value]) => [
     "-D",
-    `${key}=${value}`,
+    `${key}=${value}`
   ]);
 }
 

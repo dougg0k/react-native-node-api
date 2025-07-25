@@ -19,7 +19,7 @@ const IMPLEMENTED_RUNTIME_FUNCTIONS = [
   "napi_cancel_async_work",
   "napi_fatal_error",
   "napi_get_node_version",
-  "napi_get_version",
+  "napi_get_version"
 ];
 
 /**
@@ -63,7 +63,7 @@ export function generateSource(functions: FunctionDecl[]) {
       ${functions
         .filter(
           ({ kind, name }) =>
-            kind === "engine" || IMPLEMENTED_RUNTIME_FUNCTIONS.includes(name),
+            kind === "engine" || IMPLEMENTED_RUNTIME_FUNCTIONS.includes(name)
         )
         .flatMap(({ name }) => `.${name} = ${name},`)
         .join("\n")}

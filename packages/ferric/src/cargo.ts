@@ -11,14 +11,14 @@ import {
   type AndroidTargetName,
   type AppleTargetName,
   isAndroidTarget,
-  isAppleTarget,
+  isAppleTarget
 } from "./targets.js";
 
 const APPLE_XCFRAMEWORK_CHILDS_PER_TARGET: Record<AppleTargetName, string> = {
   "aarch64-apple-darwin": "macos-arm64_x86_64", // Universal
   "x86_64-apple-darwin": "macos-arm64_x86_64", // Universal
   "aarch64-apple-ios": "ios-arm64",
-  "aarch64-apple-ios-sim": "ios-arm64-simulator",
+  "aarch64-apple-ios-sim": "ios-arm64-simulator"
   // "aarch64-apple-ios-macabi": "", // Catalyst
   // "x86_64-apple-ios": "ios-x86_64",
   // "x86_64-apple-ios-macabi": "ios-x86_64-simulator",
@@ -32,7 +32,7 @@ const ANDROID_ARCH_PR_TARGET: Record<AndroidTargetName, string> = {
   "aarch64-linux-android": "arm64-v8a",
   "armv7-linux-androideabi": "armeabi-v7a",
   "i686-linux-android": "x86",
-  "x86_64-linux-android": "x86_64",
+  "x86_64-linux-android": "x86_64"
 };
 
 export function joinPathAndAssertExistence(...pathSegments: string[]) {
@@ -45,14 +45,14 @@ export function ensureCargo() {
   try {
     const cargoVersion = cp
       .execFileSync("cargo", ["--version"], {
-        encoding: "utf-8",
+        encoding: "utf-8"
       })
       .trim();
     console.log(chalk.dim(`Using ${cargoVersion}`));
   } catch (error) {
     throw new UsageError(
       "You need a Rust toolchain: https://doc.rust-lang.org/cargo/getting-started/installation.html#install-rust-and-cargo",
-      { cause: error },
+      { cause: error }
     );
   }
 }
@@ -78,21 +78,21 @@ export async function build(options: BuildOptions) {
     outputMode: "buffered",
     env: {
       ...process.env,
-      ...getTargetEnvironmentVariables(options),
-    },
+      ...getTargetEnvironmentVariables(options)
+    }
   });
   const targetOutputPath = joinPathAndAssertExistence(
     process.cwd(),
     "target",
     target,
-    configuration,
+    configuration
   );
   const dynamicLibraryFile = fs
     .readdirSync(targetOutputPath)
     .filter((file) => file.endsWith(".so") || file.endsWith(".dylib"));
   assert(
     dynamicLibraryFile.length === 1,
-    `Expected a single shared object file in ${targetOutputPath}`,
+    `Expected a single shared object file in ${targetOutputPath}`
   );
   return joinPathAndAssertExistence(targetOutputPath, dynamicLibraryFile[0]);
 }
@@ -124,7 +124,7 @@ export function getWeakNodeApiFrameworkPath(target: AppleTargetName) {
   return joinPathAndAssertExistence(
     weakNodeApiPath,
     "weak-node-api.xcframework",
-    APPLE_XCFRAMEWORK_CHILDS_PER_TARGET[target],
+    APPLE_XCFRAMEWORK_CHILDS_PER_TARGET[target]
   );
 }
 
@@ -132,14 +132,14 @@ export function getWeakNodeApiAndroidLibraryPath(target: AndroidTargetName) {
   return joinPathAndAssertExistence(
     weakNodeApiPath,
     "weak-node-api.android.node",
-    ANDROID_ARCH_PR_TARGET[target],
+    ANDROID_ARCH_PR_TARGET[target]
   );
 }
 
 export function getTargetEnvironmentVariables({
   target,
   ndkVersion,
-  androidApiLevel,
+  androidApiLevel
 }: BuildOptions): Record<string, string> {
   if (isAndroidTarget(target)) {
     assert(ndkVersion, "Expected ndkVersion to be set for Android targets");
@@ -149,12 +149,12 @@ export function getTargetEnvironmentVariables({
       ANDROID_HOME && fs.existsSync(ANDROID_HOME),
       `Missing ANDROID_HOME environment variable`,
       {
-        instructions: "Set ANDROID_HOME to the Android SDK directory",
-      },
+        instructions: "Set ANDROID_HOME to the Android SDK directory"
+      }
     );
     const ndkPath = path.join(ANDROID_HOME, "ndk", ndkVersion);
     assertFixable(fs.existsSync(ndkPath), `Expected NDK at ${ndkPath}`, {
-      command: `sdkmanager --install "ndk;${ndkVersion}"`,
+      command: `sdkmanager --install "ndk;${ndkVersion}"`
     });
 
     const toolchainBinPath = getLLVMToolchainBinPath(ndkPath);
@@ -169,42 +169,42 @@ export function getTargetEnvironmentVariables({
         "-L",
         weakNodeApiPath,
         "-l",
-        "weak-node-api",
+        "weak-node-api"
       ].join(String.fromCharCode(0x1f)),
       CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `aarch64-linux-android${androidApiLevel}-clang${cmdMaybe}`,
+        `aarch64-linux-android${androidApiLevel}-clang${cmdMaybe}`
       ),
       CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `armv7a-linux-androideabi${androidApiLevel}-clang${cmdMaybe}`,
+        `armv7a-linux-androideabi${androidApiLevel}-clang${cmdMaybe}`
       ),
       CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `x86_64-linux-android${androidApiLevel}-clang${cmdMaybe}`,
+        `x86_64-linux-android${androidApiLevel}-clang${cmdMaybe}`
       ),
       CARGO_TARGET_I686_LINUX_ANDROID_LINKER: joinPathAndAssertExistence(
         toolchainBinPath,
-        `i686-linux-android${androidApiLevel}-clang${cmdMaybe}`,
+        `i686-linux-android${androidApiLevel}-clang${cmdMaybe}`
       ),
       TARGET_CC: joinPathAndAssertExistence(
         toolchainBinPath,
-        `${targetArch}-linux-${targetPlatform}-clang${cmdMaybe}`,
+        `${targetArch}-linux-${targetPlatform}-clang${cmdMaybe}`
       ),
       TARGET_CXX: joinPathAndAssertExistence(
         toolchainBinPath,
-        `${targetArch}-linux-${targetPlatform}-clang++${cmdMaybe}`,
+        `${targetArch}-linux-${targetPlatform}-clang++${cmdMaybe}`
       ),
       TARGET_AR: joinPathAndAssertExistence(
         toolchainBinPath,
-        `llvm-ar${exeMaybe}`,
+        `llvm-ar${exeMaybe}`
       ),
       TARGET_RANLIB: joinPathAndAssertExistence(
         toolchainBinPath,
-        `llvm-ranlib${exeMaybe}`,
+        `llvm-ranlib${exeMaybe}`
       ),
       ANDROID_NDK: ndkPath,
-      PATH: `${toolchainBinPath}:${process.env.PATH}`,
+      PATH: `${toolchainBinPath}:${process.env.PATH}`
     };
   } else if (isAppleTarget(target)) {
     const weakNodeApiFrameworkPath = getWeakNodeApiFrameworkPath(target);
@@ -213,8 +213,8 @@ export function getTargetEnvironmentVariables({
         "-L",
         `framework=${weakNodeApiFrameworkPath}`,
         "-l",
-        "framework=weak-node-api",
-      ].join(String.fromCharCode(0x1f)),
+        "framework=weak-node-api"
+      ].join(String.fromCharCode(0x1f))
     };
   } else {
     throw new Error(`Unexpected target: ${target}`);

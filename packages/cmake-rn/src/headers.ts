@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 export function getNodeApiHeadersPath(): string {
   try {
     const packagePath = path.dirname(
-      require.resolve("node-api-headers/package.json"),
+      require.resolve("node-api-headers/package.json")
     );
     const result = path.join(packagePath, "include");
     const stat = fs.statSync(packagePath);
@@ -21,8 +21,8 @@ export function getNodeApiHeadersPath(): string {
     throw new Error(
       `Failed resolve Node-API headers: Did you install the 'node-api-headers' package?`,
       {
-        cause: error,
-      },
+        cause: error
+      }
     );
   }
 }
@@ -33,15 +33,15 @@ export function getNodeApiHeadersPath(): string {
 export function getNodeAddonHeadersPath(): string {
   try {
     const packagePath = path.dirname(
-      require.resolve("node-addon-api/package.json"),
+      require.resolve("node-addon-api/package.json")
     );
     return packagePath;
   } catch (error) {
     throw new Error(
       `Failed resolve Node-API addon headers: Did you install the 'node-addon-api' package?`,
       {
-        cause: error,
-      },
+        cause: error
+      }
     );
   }
 }

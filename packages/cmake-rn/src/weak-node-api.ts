@@ -6,7 +6,7 @@ import {
   isAndroidTriplet,
   isAppleTriplet,
   type SupportedTriplet,
-  weakNodeApiPath,
+  weakNodeApiPath
 } from "react-native-node-api";
 import { getNodeAddonHeadersPath, getNodeApiHeadersPath } from "./headers.js";
 import { ANDROID_ARCHITECTURES } from "./platforms/android.js";
@@ -19,11 +19,11 @@ export function getWeakNodeApiPath(triplet: SupportedTriplet): string {
   if (isAppleTriplet(triplet)) {
     const xcframeworkPath = path.join(
       weakNodeApiPath,
-      "weak-node-api.xcframework",
+      "weak-node-api.xcframework"
     );
     assert(
       fs.existsSync(xcframeworkPath),
-      `Expected an XCFramework at ${xcframeworkPath}`,
+      `Expected an XCFramework at ${xcframeworkPath}`
     );
     return xcframeworkPath;
   } else if (isAndroidTriplet(triplet)) {
@@ -31,7 +31,7 @@ export function getWeakNodeApiPath(triplet: SupportedTriplet): string {
       weakNodeApiPath,
       "weak-node-api.android.node",
       ANDROID_ARCHITECTURES[triplet],
-      "libweak-node-api.so",
+      "libweak-node-api.so"
     );
     assert(fs.existsSync(libraryPath), `Expected library at ${libraryPath}`);
     return libraryPath;
@@ -45,11 +45,11 @@ export function getWeakNodeApiVariables(triplet: SupportedTriplet) {
   for (const includePath of includePaths) {
     assert(
       !includePath.includes(";"),
-      `Include path with a ';' is not supported: ${includePath}`,
+      `Include path with a ';' is not supported: ${includePath}`
     );
   }
   return {
     CMAKE_JS_INC: includePaths.join(";"),
-    CMAKE_JS_LIB: getWeakNodeApiPath(triplet),
+    CMAKE_JS_LIB: getWeakNodeApiPath(triplet)
   };
 }
