@@ -25,6 +25,9 @@ async function verifyAndroidPrebuild(dirent: fs.Dirent) {
   );
   for (const arch of EXPECTED_ANDROID_ARCHS) {
     const archDir = path.join(dirent.parentPath, dirent.name, arch);
+    if (fs.existsSync(archDir)) {
+      return;
+    }
     for (const file of await fs.promises.readdir(archDir, {
       withFileTypes: true,
     })) {
