@@ -61,6 +61,7 @@ export function ensureCargo() {
 
 type BuildOptions = {
   configuration: "debug" | "release";
+	sourcePath: string;
 } & (
   | {
       target: AndroidTargetName;
@@ -75,8 +76,9 @@ type BuildOptions = {
 );
 
 export async function build(options: BuildOptions) {
-  const { target, configuration } = options;
-  const args = ["build", "--target", target]
+  const { target, configuration, sourcePath } = options;
+	const manifestBuildPath = `${sourcePath}/Cargo.toml`;
+  const args = ["build", "--target", target, manifestBuildPath]
   if (configuration.toLowerCase() === 'release') {
     args.push('--release')
   }

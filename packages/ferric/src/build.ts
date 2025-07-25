@@ -97,6 +97,10 @@ const outputPathOption = new Option(
   "--output <path>",
   "Writing outputs to this directory"
 ).default(process.cwd());
+const cwdPathOption = new Option(
+  "--cwd <path>",
+  "Specify project path"
+).default(process.cwd());
 const configurationOption = new Option(
   "--configuration <configuration>",
   "Build configuration"
@@ -111,6 +115,7 @@ export const buildCommand = new Command("build")
   .addOption(androidTarget)
   .addOption(ndkVersionOption)
   .addOption(outputPathOption)
+  .addOption(cwdPathOption)
   .addOption(configurationOption)
   .addOption(xcframeworkExtensionOption)
   .action(
@@ -120,6 +125,7 @@ export const buildCommand = new Command("build")
       android,
       ndkVersion,
       output: outputPath,
+			cwd,
       configuration,
       xcframeworkExtension,
     }) => {
@@ -175,7 +181,7 @@ export const buildCommand = new Command("build")
             Promise.all(
               appleTargets.map(
                 async (target) =>
-                  [target, await build({ configuration, target })] as const
+                  [target, await build({ configuration, target, sourcePath: cwd })] as const
               )
             ),
             Promise.all(
@@ -186,6 +192,7 @@ export const buildCommand = new Command("build")
                     await build({
                       configuration,
                       target,
+											sourcePath: cwd,
                       ndkVersion,
                       androidApiLevel: ANDROID_API_LEVEL,
                     }),
@@ -274,7 +281,7 @@ export const buildCommand = new Command("build")
         await oraPromise(
           generateTypeScriptDeclarations({
             outputFilename: declarationsFilename,
-            createPath: process.cwd(),
+            createPath: cwd,
             outputPath,
           }),
           {
