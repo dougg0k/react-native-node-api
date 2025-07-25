@@ -4,7 +4,7 @@
     "composite": true,
     "emitDeclarationOnly": true
   },
-  "include": ["__tests__/**/*.test.ts"],
+  "include": ["src/**/*.test.ts"],
   "exclude": [],
   "references": [
     {
