@@ -9,9 +9,9 @@
     "clean": "tsc --build --clean",
     "dev": "tsc --build --watch",
     "lint": "eslint .",
-    "test": "pnpm test --workspace react-native-node-api --workspace cmake-rn --workspace gyp-to-cmake --workspace node-addon-examples",
-    "bootstrap": "pnpm build && pnpm bootstrap --workspaces --if-present",
-    "prerelease": "pnpm build && pnpm prerelease --workspaces --if-present",
+    "test": "pnpm --filter react-native-node-api --filter cmake-rn --filter gyp-to-cmake --filter node-addon-examples test",
+    "bootstrap": "pnpm --recursive --if-present build",
+    "prerelease": "pnpm --recursive --if-present prerelease",
     "release": "changeset publish"
   },
   "author": {

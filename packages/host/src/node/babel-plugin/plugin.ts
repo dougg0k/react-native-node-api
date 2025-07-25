@@ -48,7 +48,7 @@ export function replaceWithRequireNodeAddon(
         t.identifier("requireNodeAddon")
       ),
       [t.stringLiteral(requireCallArgument)]
-    )
+    ) as any
   );
 }
 
