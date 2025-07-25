@@ -15,7 +15,7 @@ import {
   determineAndroidLibsFilename,
   determineLibraryBasename,
   determineXCFrameworkFilename,
-  prettyPath
+  prettyPath,
 } from "react-native-node-api";
 import { getBlockComment } from "./banner.js";
 import { build, ensureCargo } from "./cargo.js";
@@ -28,7 +28,7 @@ import {
   APPLE_TARGETS,
   type AppleTargetName,
   ensureInstalledTargets,
-  filterTargetsByPlatform
+  filterTargetsByPlatform,
 } from "./targets.js";
 
 type EntrypointOptions = {
@@ -37,16 +37,16 @@ type EntrypointOptions = {
 };
 async function generateEntrypoint({
   outputPath,
-  libraryName
+  libraryName,
 }: EntrypointOptions) {
   await fs.promises.writeFile(
     outputPath,
     [
       "/* eslint-disable */",
       getBlockComment(),
-      `module.exports = require('./${libraryName}.node');`
+      `module.exports = require('./${libraryName}.node');`,
     ].join("\n\n") + "\n",
-    "utf8"
+    "utf8",
   );
 }
 
@@ -54,7 +54,7 @@ const ANDROID_TRIPLET_PER_TARGET: Record<AndroidTargetName, AndroidTriplet> = {
   "aarch64-linux-android": "aarch64-linux-android",
   "armv7-linux-androideabi": "armv7a-linux-androideabi",
   "i686-linux-android": "i686-linux-android",
-  "x86_64-linux-android": "x86_64-linux-android"
+  "x86_64-linux-android": "x86_64-linux-android",
 };
 
 // This should match https://github.com/react-native-community/template/blob/main/template/android/build.gradle#L7
@@ -71,8 +71,8 @@ function getDefaultTargets() {
       `Unexpected target in FERRIC_TARGETS: ${target}`,
       {
         instructions:
-          "Pass only valid targets via FERRIC_TARGETS (or remove them)"
-      }
+          "Pass only valid targets via FERRIC_TARGETS (or remove them)",
+      },
     );
   }
   return result as (typeof ALL_TARGETS)[number][];
@@ -85,21 +85,21 @@ const appleTarget = new Option("--apple", "Use all Apple targets");
 const androidTarget = new Option("--android", "Use all Android targets");
 const ndkVersionOption = new Option(
   "--ndk-version <version>",
-  "The NDK version to use for Android builds"
+  "The NDK version to use for Android builds",
 ).default(DEFAULT_NDK_VERSION);
 const xcframeworkExtensionOption = new Option(
   "--xcframework-extension",
-  "Don't rename the xcframework to .apple.node"
+  "Don't rename the xcframework to .apple.node",
 ).default(false);
 
 const outputPathOption = new Option(
   "--output <path>",
-  "Writing outputs to this directory"
+  "Writing outputs to this directory",
 ).default(process.cwd());
 const cwdPathOption = new Option("--cwd <path>", "Specify project path");
 const configurationOption = new Option(
   "--configuration <configuration>",
-  "Build configuration"
+  "Build configuration",
 )
   .choices(["debug", "release"])
   .default("debug");
@@ -123,7 +123,7 @@ export const buildCommand = new Command("build")
       output: outputPath,
       cwd: cwdPath,
       configuration,
-      xcframeworkExtension
+      xcframeworkExtension,
     }) => {
       const sourcePath =
         cwdPath && cwdPath.length > 0
@@ -160,11 +160,11 @@ export const buildCommand = new Command("build")
             chalk.yellowBright("ℹ"),
             chalk.dim(
               `Using default targets, pass ${chalk.italic(
-                "--android"
+                "--android",
               )}, ${chalk.italic("--apple")} or individual ${chalk.italic(
-                "--target"
-              )} options, to avoid this.`
-            )
+                "--target",
+              )} options, to avoid this.`,
+            ),
           );
         }
         ensureCargo();
@@ -184,9 +184,9 @@ export const buildCommand = new Command("build")
                 async (target) =>
                   [
                     target,
-                    await build({ configuration, target, sourcePath })
-                  ] as const
-              )
+                    await build({ configuration, target, sourcePath }),
+                  ] as const,
+              ),
             ),
             Promise.all(
               androidTargets.map(
@@ -198,49 +198,49 @@ export const buildCommand = new Command("build")
                       target,
                       sourcePath,
                       ndkVersion,
-                      androidApiLevel: ANDROID_API_LEVEL
-                    })
-                  ] as const
-              )
-            )
+                      androidApiLevel: ANDROID_API_LEVEL,
+                    }),
+                  ] as const,
+              ),
+            ),
           ]),
           {
             text: `Building ${targetsDescription}`,
             successText: `Built ${targetsDescription}`,
-            failText: (error: Error) => `Failed to build: ${error.message}`
-          }
+            failText: (error: Error) => `Failed to build: ${error.message}`,
+          },
         );
 
         if (androidLibraries.length > 0) {
           const libraryPathByTriplet = Object.fromEntries(
             androidLibraries.map(([target, outputPath]) => [
               ANDROID_TRIPLET_PER_TARGET[target],
-              outputPath
-            ])
+              outputPath,
+            ]),
           ) as Record<AndroidTriplet, string>;
 
           const androidLibsFilename = determineAndroidLibsFilename(
-            Object.values(libraryPathByTriplet)
+            Object.values(libraryPathByTriplet),
           );
           const androidLibsOutputPath = path.resolve(
             outputPath,
-            androidLibsFilename
+            androidLibsFilename,
           );
 
           await oraPromise(
             createAndroidLibsDirectory({
               outputPath: androidLibsOutputPath,
               libraryPathByTriplet,
-              autoLink: true
+              autoLink: true,
             }),
             {
               text: "Assembling Android libs directory",
               successText: `Android libs directory assembled into ${prettyPath(
-                androidLibsOutputPath
+                androidLibsOutputPath,
               )}`,
               failText: ({ message }) =>
-                `Failed to assemble Android libs directory: ${message}`
-            }
+                `Failed to assemble Android libs directory: ${message}`,
+            },
           );
         }
 
@@ -249,35 +249,35 @@ export const buildCommand = new Command("build")
           const frameworkPaths = libraryPaths.map(createAppleFramework);
           const xcframeworkFilename = determineXCFrameworkFilename(
             frameworkPaths,
-            xcframeworkExtension ? ".xcframework" : ".apple.node"
+            xcframeworkExtension ? ".xcframework" : ".apple.node",
           );
 
           // Create the xcframework
           const xcframeworkOutputPath = path.resolve(
             outputPath,
-            xcframeworkFilename
+            xcframeworkFilename,
           );
 
           await oraPromise(
             createXCframework({
               outputPath: xcframeworkOutputPath,
               frameworkPaths,
-              autoLink: true
+              autoLink: true,
             }),
             {
               text: "Assembling XCFramework",
               successText: `XCFramework assembled into ${chalk.dim(
-                path.relative(outputPath, xcframeworkOutputPath)
+                path.relative(outputPath, xcframeworkOutputPath),
               )}`,
               failText: ({ message }) =>
-                `Failed to assemble XCFramework: ${message}`
-            }
+                `Failed to assemble XCFramework: ${message}`,
+            },
           );
         }
 
         const libraryName = determineLibraryBasename([
           ...androidLibraries.map(([, outputPath]) => outputPath),
-          ...appleLibraries.map(([, outputPath]) => outputPath)
+          ...appleLibraries.map(([, outputPath]) => outputPath),
         ]);
 
         const declarationsFilename = `${libraryName}.d.ts`;
@@ -286,16 +286,16 @@ export const buildCommand = new Command("build")
           generateTypeScriptDeclarations({
             outputFilename: declarationsFilename,
             createPath: sourcePath,
-            outputPath
+            outputPath,
           }),
           {
             text: "Generating TypeScript declarations",
             successText: `Generated TypeScript declarations ${prettyPath(
-              declarationsPath
+              declarationsPath,
             )}`,
             failText: (error) =>
-              `Failed to generate TypeScript declarations: ${error.message}`
-          }
+              `Failed to generate TypeScript declarations: ${error.message}`,
+          },
         );
 
         const entrypointPath = path.join(outputPath, `${libraryName}.js`);
@@ -303,16 +303,16 @@ export const buildCommand = new Command("build")
         await oraPromise(
           generateEntrypoint({
             libraryName,
-            outputPath: entrypointPath
+            outputPath: entrypointPath,
           }),
           {
             text: `Generating entrypoint`,
             successText: `Generated entrypoint into ${prettyPath(
-              entrypointPath
+              entrypointPath,
             )}`,
             failText: (error) =>
-              `Failed to generate entrypoint: ${error.message}`
-          }
+              `Failed to generate entrypoint: ${error.message}`,
+          },
         );
       } catch (error) {
         process.exitCode = 1;
@@ -329,18 +329,18 @@ export const buildCommand = new Command("build")
               chalk.green("FIX"),
               error.fix.command
                 ? chalk.dim("Run: ") + error.fix.command
-                : error.fix.instructions
+                : error.fix.instructions,
             );
           }
         } else {
           throw error;
         }
       }
-    }
+    },
   );
 
 async function combineLibraries(
-  libraries: Readonly<[AppleTargetName, string]>[]
+  libraries: Readonly<[AppleTargetName, string]>[],
 ): Promise<string[]> {
   const result = [];
   const darwinLibraries = [];
@@ -362,8 +362,8 @@ async function combineLibraries(
         text: "Combining Darwin libraries into a universal library",
         successText: "Combined Darwin libraries into a universal library",
         failText: (error) =>
-          `Failed to combine Darwin libraries: ${error.message}`
-      }
+          `Failed to combine Darwin libraries: ${error.message}`,
+      },
     );
     return [...result, universalPath];
   }
