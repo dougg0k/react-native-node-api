@@ -165,8 +165,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0
       react-native-node-api:
-        specifier: 0.3.2
-        version: 0.3.2(@babel/core@7.28.0)(react-native@0.79.5(@babel/core@7.28.0)(@react-native-community/cli@18.0.0(typescript@5.8.3))(@types/react@19.1.8)(react@19.0.0))
+        specifier: workspace:*
+        version: link:../host
 
   packages/ferric-example:
     devDependencies:
@@ -6539,9 +6539,7 @@ snapshots:
       metro-runtime: 0.82.5
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.79.5': {}
 
