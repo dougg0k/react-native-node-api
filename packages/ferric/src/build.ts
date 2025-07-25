@@ -124,12 +124,12 @@ export const buildCommand = new Command("build")
 			android,
 			ndkVersion,
 			output: outputPath,
-			cwd,
+			cwd: cwdPath,
 			configuration,
 			xcframeworkExtension,
 		}) => {
-			outputPath =
-				cwd && cwd.length > 0 ? path.join(outputPath, cwd) : outputPath;
+			const sourcePath = cwdPath && cwdPath.length > 0 ? path.join(outputPath, cwdPath) : outputPath;
+			outputPath = path.join(sourcePath, "dist");
 			try {
 				const targets = new Set([...targetArg]);
 				if (apple) {
@@ -184,7 +184,7 @@ export const buildCommand = new Command("build")
 								async (target) =>
 									[
 										target,
-										await build({ configuration, target, sourcePath: outputPath }),
+										await build({ configuration, target, sourcePath }),
 									] as const,
 							),
 						),
@@ -196,7 +196,7 @@ export const buildCommand = new Command("build")
 										await build({
 											configuration,
 											target,
-											sourcePath: outputPath,
+											sourcePath,
 											ndkVersion,
 											androidApiLevel: ANDROID_API_LEVEL,
 										}),
@@ -285,7 +285,7 @@ export const buildCommand = new Command("build")
 				await oraPromise(
 					generateTypeScriptDeclarations({
 						outputFilename: declarationsFilename,
-						createPath: outputPath,
+						createPath: sourcePath,
 						outputPath,
 					}),
 					{
