@@ -13,8 +13,7 @@
     "ferric": "./bin/ferric.js"
   },
   "scripts": {
-    "start": "tsx src/run.ts",
-		"test": "vitest"
+    "start": "tsx src/run.ts"
   },
   "dependencies": {
     "@commander-js/extra-typings": "14.0.0",
@@ -24,8 +23,5 @@
     "commander": "14.0.0",
     "ora": "^8.2.0",
     "react-native-node-api": "0.3.2"
-  },
-  "devDependencies": {
-    "vitest": "^3.2.4"
   }
 }
