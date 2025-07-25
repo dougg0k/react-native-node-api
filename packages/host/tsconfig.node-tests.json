@@ -2,6 +2,7 @@
   "extends": "./tsconfig.node.json",
   "compilerOptions": {
     "composite": true,
+		"skipLibCheck": true,
     "emitDeclarationOnly": true
   },
   "include": ["src/node/**/*.test.ts"],

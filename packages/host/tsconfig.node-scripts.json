@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "emitDeclarationOnly": true,
+		"skipLibCheck": true,
     "outDir": "dist",
     "rootDir": "scripts",
     "types": ["node"]
