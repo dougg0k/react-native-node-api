@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": false,
+		"skipLibCheck": true,
     "module": "commonjs",
     "outDir": "dist",
     "rootDir": "src",

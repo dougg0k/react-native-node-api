@@ -4,6 +4,7 @@
     "composite": true,
     "emitDeclarationOnly": true,
     "outDir": "dist",
+		"skipLibCheck": true,
     "rootDir": "scripts",
     "types": ["node", "read-pkg"]
   },
