@@ -11,6 +11,6 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 ```json
 "scripts": {
    "build": "ferric build --cwd folder_path",
-   "build:release": "npm run build --configuration release",
+   "build:release": "npm run build -- --configuration release",
 },
 ```
