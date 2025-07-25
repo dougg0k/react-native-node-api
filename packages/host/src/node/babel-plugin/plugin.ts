@@ -48,7 +48,8 @@ export function replaceWithRequireNodeAddon(
         t.identifier("requireNodeAddon")
       ),
       [t.stringLiteral(requireCallArgument)]
-    ) as any
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    ) as any 
   );
 }
 
