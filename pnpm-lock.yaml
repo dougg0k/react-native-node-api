@@ -219,6 +219,9 @@ importers:
       '@babel/types':
         specifier: ^7.27.0
         version: 7.28.2
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
       fswin:
         specifier: ^3.24.829
         version: 3.24.829
