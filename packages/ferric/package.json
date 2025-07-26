@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "tsx src/run.ts",
-    "build": "tsc --build --verbose && pnpm copy-templates",
+    "build": "tsc --build && pnpm copy-templates",
     "test": "tsx --test --test-reporter=@reporters/github --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout src/**/*.test.ts",
     "copy-templates": "copyfiles -u 1 src/templates/**/* dist"
   },

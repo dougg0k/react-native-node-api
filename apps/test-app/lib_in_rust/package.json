@@ -1,9 +1,9 @@
 {
-  "name": "project_name",
+  "name": "lib_in_rust",
   "private": true,
   "version": "0.1.0",
-  "main": "dist/project_name.js",
-  "types": "dist/project_name.d.ts",
+  "main": "dist/lib_in_rust.js",
+  "types": "dist/lib_in_rust.d.ts",
   "scripts": {
     "build": "ferric build",
     "build:release": "npm run build -- --configuration release"

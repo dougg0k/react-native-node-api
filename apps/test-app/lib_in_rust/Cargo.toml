@@ -1,5 +1,5 @@
 [package]
-name = "project_name"
+name = "lib_in_rust"
 version = "1.0.0"
 edition = "2021"
 license = "MIT"
