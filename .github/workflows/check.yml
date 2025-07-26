@@ -24,7 +24,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 'latest'
+          version: "latest"
           run_install: false
       - uses: actions/setup-node@v4
         with:
@@ -47,7 +47,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 'latest'
+          version: "latest"
           run_install: false
       - uses: actions/setup-node@v4
         with:
@@ -74,7 +74,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 'latest'
+          version: "latest"
           run_install: false
       - uses: actions/setup-node@v4
         with:
@@ -110,7 +110,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 'latest'
+          version: "latest"
           run_install: false
       - uses: actions/setup-node@v4
         with:
