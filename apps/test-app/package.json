@@ -33,13 +33,13 @@
     "@types/mocha": "^10.0.10",
     "@types/react": "^19.0.0",
     "concurrently": "^9.1.2",
-    "ferric-cli": "workspace:*",
+    "ferric-cli": "*",
     "mocha": "^11.6.0",
     "mocha-remote-cli": "^1.13.2",
     "mocha-remote-react-native": "^1.13.2",
     "react": "19.0.0",
     "react-native": "0.79.5",
-    "@react-native-node-api/node-addon-examples": "workspace:*",
+    "@react-native-node-api/node-addon-examples": "*",
     "react-native-node-api": "*",
     "react-native-test-app": "^4.3.3"
   }
