@@ -17,7 +17,7 @@
     "test:ios:ferricExample": "MOCHA_REMOTE_CONTEXT=ferricExample npm run test:ios -- ",
     "gen:rs": "ferric init lib_in_rust",
     "build:rs": "ferric build --cwd lib_in_rust",
-    "build:rs:release": "npm run build:rs --configuration release"
+    "build:rs:release": "npm run build:rs -- --configuration release"
   },
   "dependencies": {
     "@babel/core": "^7.26.10",

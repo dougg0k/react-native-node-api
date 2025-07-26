@@ -1,7 +1,5 @@
-export function cargoTomlTemplate(projectName: string) {
-	return `
 [package]
-name = ${projectName}
+name = "PROJECT_NAME"
 version = "1.0.0"
 edition = "2021"
 license = "MIT"
@@ -27,32 +25,3 @@ lto = true
 codegen-units = 1
 strip = "symbols"
 opt-level = "z"
-panic = "abort"
-`;
-}
-
-export const GIT_IGNORE_TEMPLATE = `
-target
-Cargo.lock
-
-*.xcframework/
-*.apple.node/
-*.android.node/
-
-dist
-`;
-
-export const BUILD_RS_TEMPLATE = `
-fn main() {
-  napi_build::setup();
-}
-`;
-
-export const LIB_RS_TEMPLATE = `
-use napi_derive::napi;
-
-#[napi]
-pub fn sum(a: i32, b: i32) -> i32 {
-    a + b
-}
-`;
