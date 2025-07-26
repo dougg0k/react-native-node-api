@@ -31,6 +31,7 @@ jobs:
           node-version: lts/jod
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      - run: pnpm prettier:check
   unit-tests:
     strategy:
       fail-fast: false

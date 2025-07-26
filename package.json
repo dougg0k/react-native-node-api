@@ -12,6 +12,8 @@
     "test": "pnpm --filter react-native-node-api --filter cmake-rn --filter gyp-to-cmake --filter node-addon-examples test",
     "bootstrap": "pnpm --recursive --if-present build",
     "prerelease": "pnpm --recursive --if-present prerelease",
+    "prettier:check": "prettier --experimental-cli --check .",
+    "prettier:write": "prettier --experimental-cli --write .",
     "release": "changeset publish"
   },
   "author": {
@@ -32,15 +34,18 @@
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
     "@eslint/js": "^9.19.0",
+    "@prettier/plugin-oxc": "^0.0.4",
     "@reporters/github": "^1.7.2",
     "@tsconfig/node22": "^22.0.0",
     "@tsconfig/react-native": "3.0.5",
     "@types/node": "^22.13.0",
     "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.1.5",
     "globals": "^16.0.0",
+    "prettier": "^3.6.2",
     "react-native": "0.79.5",
+    "tsx": "^4.20.3",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.22.0",
-    "tsx": "^4.19.3"
+    "typescript-eslint": "^8.22.0"
   }
 }
