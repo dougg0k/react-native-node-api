@@ -21,13 +21,11 @@ function describeIf(
 type Context = {
   allTests?: boolean;
   nodeAddonExamples?: boolean;
-  ferricExample?: boolean;
 };
 
 function loadTests({
   allTests = false,
   nodeAddonExamples = allTests,
-  ferricExample = allTests,
 }: Context) {
   describeIf(nodeAddonExamples, "Node Addon Examples", () => {
     for (const [suiteName, examples] of Object.entries(
