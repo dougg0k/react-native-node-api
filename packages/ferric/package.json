@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "tsx src/run.ts",
-		"test": "vitest"
+    "test": "tsx --test --test-reporter=@reporters/github --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout src/**/*.test.ts"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^13.1.0",
@@ -24,8 +24,5 @@
     "commander": "^13.1.0",
     "ora": "^8.2.0",
     "react-native-node-api": "0.3.2"
-  },
-  "devDependencies": {
-    "vitest": "^3.2.4"
   }
 }
