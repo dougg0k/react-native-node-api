@@ -135,7 +135,7 @@ jobs:
         working-directory: packages/host
       - name: Build lib_in_rust for android architectures
         run: npm run build -- --android
-        working-directory: packages/apps/test-app/lib_in_rust
+        working-directory: apps/test-app/lib_in_rust
       - name: Run tests (Android)
         timeout-minutes: 75
         uses: reactivecircus/android-emulator-runner@v2
