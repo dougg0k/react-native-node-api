@@ -12,8 +12,8 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 "scripts": {
   "gen:rs": "ferric init lib_name",
    "build": "ferric build --cwd lib_name",
-   "build:release": "npm run build -- --configuration release",
-},
+   "build:release": "npm run build -- --configuration release"
+}
 ```
 
 ### Project Structure
@@ -33,3 +33,5 @@ lib_name
 │ │ native_android_folder
 │ │ native_ios_folder
 ```
+
+> Example project seen in `apps/test-app/lib_in_rust`.
