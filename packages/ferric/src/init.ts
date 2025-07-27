@@ -42,14 +42,12 @@ async function copyAllTemplateFiles(outputFilePath: string) {
   await fsPromise.cp(templateDir, outputFilePath, {
     recursive: true,
   });
-  await fsPromise.rename(
-    `${outputFilePath}/lib.rs`,
-    `${outputFilePath}/src/lib.rs`,
-  );
-  await fsPromise.rename(
-    `${outputFilePath}/gitignore`,
-    `${outputFilePath}/.gitignore`,
-  );
+  await moveFile(`${outputFilePath}/lib.rs`, `${outputFilePath}/src/lib.rs`);
+  await moveFile(`${outputFilePath}/gitignore`, `${outputFilePath}/.gitignore`);
+}
+
+async function moveFile(currentPath: string, newPath: string) {
+  await fsPromise.rename(currentPath, newPath);
 }
 
 async function generateProject({
@@ -62,14 +60,11 @@ async function generateProject({
   createFolder(outputPath);
   createFolder(`${outputPath}/src`);
   await copyAllTemplateFiles(outputPath);
+  const strToReplace = "project_name";
   await replaceStrInFile(
     `${outputPath}/package.json`,
-    "project_name",
+    strToReplace,
     projectName,
   );
-  await replaceStrInFile(
-    `${outputPath}/Cargo.toml`,
-    "project_name",
-    projectName,
-  );
+  await replaceStrInFile(`${outputPath}/Cargo.toml`, strToReplace, projectName);
 }
