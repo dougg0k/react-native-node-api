@@ -12,6 +12,9 @@ export default tseslint.config(
     "apps/test-app/ios/**",
     "packages/host/hermes/**",
     "packages/node-addon-examples/examples/**",
+    "packages/ferric-example/ferric_example.d.ts",
+    "packages/node-tests/node/**",
+    "packages/node-tests/tests/**",
   ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -22,6 +25,7 @@ export default tseslint.config(
       "packages/node-addon-examples/*.js",
       "packages/host/babel-plugin.js",
       "packages/host/react-native.config.js",
+      "packages/node-tests/tests.generated.js",
     ],
     languageOptions: {
       parserOptions: {

@@ -9,6 +9,7 @@ import {
 } from "mocha-remote-react-native";
 
 import { suites as nodeAddonExamplesSuites } from "@react-native-node-api/node-addon-examples";
+import { suites as nodeTestsSuites } from "@react-native-node-api/node-tests";
 
 function describeIf(
   condition: boolean,
@@ -21,11 +22,13 @@ function describeIf(
 type Context = {
   allTests?: boolean;
   nodeAddonExamples?: boolean;
+  nodeTests?: boolean;
 };
 
 function loadTests({
   allTests = false,
   nodeAddonExamples = allTests,
+  nodeTests = allTests,
 }: Context) {
   describeIf(nodeAddonExamples, "Node Addon Examples", () => {
     for (const [suiteName, examples] of Object.entries(
@@ -42,6 +45,22 @@ function loadTests({
         }
       });
     }
+  });
+
+  describeIf(nodeTests, "Node Tests", () => {
+    function registerTestSuite(suite: typeof nodeTestsSuites) {
+      for (const [name, suiteOrTest] of Object.entries(suite)) {
+        if (typeof suiteOrTest === "function") {
+          it(name, suiteOrTest);
+        } else {
+          describe(name, () => {
+            registerTestSuite(suiteOrTest);
+          });
+        }
+      }
+    }
+
+    registerTestSuite(nodeTestsSuites);
   });
 }
 
