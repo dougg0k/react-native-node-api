@@ -2,24 +2,30 @@
 
 import { globalIgnores } from "eslint/config";
 import globals from "globals";
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default tseslint.config(
-  globalIgnores([".nx/**"]),
-  globalIgnores(["**/dist/**"]),
-  globalIgnores(["apps/test-app/ios/**"]),
-  globalIgnores(["packages/host/hermes/**"]),
-  globalIgnores(["packages/node-addon-examples/examples/**"]),
-  globalIgnores(["packages/ferric-example/ferric_example.d.ts"]),
+  globalIgnores([
+    "**/dist/**",
+    "apps/test-app/ios/**",
+    "packages/host/hermes/**",
+    "packages/node-addon-examples/examples/**",
+    "packages/ferric-example/ferric_example.d.ts",
+    "packages/node-tests/node/**",
+    "packages/node-tests/tests/**",
+  ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
+  eslintConfigPrettier,
   {
     files: [
       "apps/test-app/*.js",
       "packages/node-addon-examples/*.js",
       "packages/host/babel-plugin.js",
-      "packages/host/react-native.config.js"
+      "packages/host/react-native.config.js",
+      "packages/node-tests/tests.generated.js",
     ],
     languageOptions: {
       parserOptions: {
@@ -38,7 +44,7 @@ export default tseslint.config(
     files: [
       "packages/gyp-to-cmake/bin/*.js",
       "packages/host/bin/*.mjs",
-      "packages/host/scripts/*.mjs"
+      "packages/host/scripts/*.mjs",
     ],
     languageOptions: {
       globals: {
