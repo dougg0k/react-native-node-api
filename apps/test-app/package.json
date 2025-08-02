@@ -25,7 +25,7 @@
     "@react-native-community/cli": "^18.0.0",
     "@react-native-community/cli-platform-android": "^18.0.0",
     "@react-native-community/cli-platform-ios": "^18.0.0",
-    "@react-native-node-api/node-tests": "*",
+    "@react-native-node-api/node-tests": "workspace:*",
     "@react-native/babel-preset": "0.79.0",
     "@react-native/metro-config": "0.79.0",
     "@react-native/typescript-config": "0.79.0",
