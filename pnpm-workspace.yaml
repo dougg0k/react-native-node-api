@@ -4,6 +4,7 @@ packages:
   - packages/host
   - packages/ferric
   - packages/node-addon-examples
+  - packages/node-tests
   - packages/ferric-example
   - apps/test-app
 
