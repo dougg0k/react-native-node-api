@@ -7,27 +7,27 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 <details>
   <summary>npm</summary>
 
- ```
-  npm install --save-dev ferric-cli
- ```
+```
+ npm install --save-dev ferric-cli
+```
 
 </details>
 
 <details>
   <summary>pnpm</summary>
 
- ```
-  pnpm install -D ferric-cli
- ```
+```
+ pnpm install -D ferric-cli
+```
 
 </details>
 
 <details>
   <summary>yarn</summary>
 
- ```
-  yarn add -D ferric-cli
- ```
+```
+ yarn add -D ferric-cli
+```
 
 </details>
 
