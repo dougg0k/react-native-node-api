@@ -4,7 +4,32 @@ A wrapper around Cargo making it easier to produce prebuilt binaries targeting i
 
 ## Install the project
 
-`npm install --save-dev ferric-cli`
+<details>
+  <summary>npm</summary>
+
+ ```
+  npm install --save-dev ferric-cli
+ ```
+
+</details>
+
+<details>
+  <summary>pnpm</summary>
+
+ ```
+  pnpm install -D ferric-cli
+ ```
+
+</details>
+
+<details>
+  <summary>yarn</summary>
+
+ ```
+  yarn add -D ferric-cli
+ ```
+
+</details>
 
 ## Add scripts
 
