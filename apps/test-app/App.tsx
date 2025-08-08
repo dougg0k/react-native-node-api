@@ -39,7 +39,10 @@ function loadTests({
           it(exampleName, async () => {
             const test = requireExample();
             if (test instanceof Function) {
-              await test();
+              const result = test();
+              if (result instanceof Promise) {
+                await result;
+              }
             }
           });
         }
