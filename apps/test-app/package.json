@@ -38,9 +38,8 @@
     "mocha": "^11.6.0",
     "mocha-remote-cli": "^1.13.2",
     "mocha-remote-react-native": "^1.13.2",
-    "react": "19.0.0",
+    "react": "^19.1.0",
     "react-native": "~0.81",
-    "react-native-node-addon-examples": "*",
     "react-native-node-api": "*",
     "react-native-test-app": "^4.3.3"
   }
