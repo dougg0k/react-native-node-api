@@ -2,25 +2,57 @@
 
 import { globalIgnores } from "eslint/config";
 import globals from "globals";
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default tseslint.config(
-  globalIgnores([".nx/**"]),
-  globalIgnores(["**/dist/**"]),
-  globalIgnores(["apps/test-app/ios/**"]),
-  globalIgnores(["packages/host/hermes/**"]),
-  globalIgnores(["packages/node-addon-examples/examples/**"]),
-  globalIgnores(["packages/ferric-example/ferric_example.d.ts"]),
+  globalIgnores([
+    "**/dist/**",
+    "**/build/**",
+    "apps/test-app/ios/**",
+    "packages/host/hermes/**",
+    "packages/node-addon-examples/examples/**",
+    "packages/ferric-example/ferric_example.js",
+    "packages/ferric-example/ferric_example.d.ts",
+    "packages/ferric-example/target/**",
+    "packages/node-tests/node/**",
+    "packages/node-tests/tests/**",
+    "packages/node-tests/*.generated.js",
+    "packages/node-tests/*.generated.d.ts",
+  ]),
   eslint.configs.recommended,
-  tseslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  {
+    rules: {
+      "@typescript-eslint/no-floating-promises": [
+        "error",
+        {
+          allowForKnownSafeCalls: [
+            { from: "package", name: ["suite", "test"], package: "node:test" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  eslintConfigPrettier,
   {
     files: [
       "apps/test-app/*.js",
-      "packages/node-addon-examples/*.js",
+      "packages/node-addon-examples/**/*.js",
       "packages/host/babel-plugin.js",
-      "packages/host/react-native.config.js"
+      "packages/host/react-native.config.js",
+      "packages/node-tests/tests.generated.js",
     ],
+    extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       parserOptions: {
         sourceType: "commonjs",
@@ -38,8 +70,11 @@ export default tseslint.config(
     files: [
       "packages/gyp-to-cmake/bin/*.js",
       "packages/host/bin/*.mjs",
-      "packages/host/scripts/*.mjs"
+      "packages/host/scripts/*.mjs",
+      "packages/ferric/bin/*.js",
+      "packages/cmake-rn/bin/*.js",
     ],
+    extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       globals: {
         ...globals.node,

@@ -25,21 +25,13 @@ The generated code looks something like this:
 
 ```javascript
 module.exports = require("react-native-node-api").requireNodeAddon(
-  "calculator-lib--prebuild"
+  "calculator-lib--prebuild",
 );
 ```
 
 > [!NOTE]
 > In the time of writing, this code only supports iOS as passes the path to the library with its .framework.
 > We plan on generalizing this soon 🤞
-
-### A note on the need for path-hashing
-
-Notice that the `requireNodeAddon` call doesn't reference the library by it's original name (`prebuild.node`) but instead a name containing a hash.
-
-In Node.js dynamic libraries sharing names can be disambiguated based off their path on disk. Dynamic libraries added to an iOS application are essentially hoisted and occupy a shared global namespace. This leads to collisions and makes it impossible to disambiguate multiple libraries sharing the same name. We need a way to map a require call, referencing the library by its path relative to the JS file, into a unique name of the library once it's added into the application.
-
-To work around this issue, we scan for and copy any library (including its entire xcframework structure with nested framework directories) from the dependency package into our host package when the app builds and reference these from its podspec (as vendored_frameworks). We use a special file in the xcframeworks containing Node-API modules. To avoid collisions we rename xcframework, framework and library files to a unique name, containing a hash. The hash is computed based off the package-name of the containing package and the relative path from the package root to the library file (with any platform specific file extensions replaced with the neutral ".node" extension).
 
 ## Transformed code calls into `react-native-node-api`, loading the platform specific dynamic library
 

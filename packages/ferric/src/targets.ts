@@ -66,14 +66,14 @@ export function ensureInstalledTargets(expectedTargets: Set<TargetName>) {
       `You're missing ${
         missingTargets.size
       } targets - to fix this, run:\n\n${chalk.italic(
-        `rustup target add ${[...missingTargets].join(" ")}`
-      )}`
+        `rustup target add ${[...missingTargets].join(" ")}`,
+      )}`,
     );
   }
 }
 
 export function isAndroidTarget(
-  target: TargetName
+  target: TargetName,
 ): target is AndroidTargetName {
   return ANDROID_TARGETS.includes(target as (typeof ANDROID_TARGETS)[number]);
 }
@@ -84,21 +84,21 @@ export function isAppleTarget(target: TargetName): target is AppleTargetName {
 
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "android"
+  platform: "android",
 ): AndroidTargetName[];
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "apple"
+  platform: "apple",
 ): AppleTargetName[];
 export function filterTargetsByPlatform(
   targets: Set<TargetName>,
-  platform: "apple" | "android"
+  platform: "apple" | "android",
 ) {
   if (platform === "android") {
     return [...targets].filter(isAndroidTarget);
   } else if (platform === "apple") {
     return [...targets].filter(isAppleTarget);
   } else {
-    throw new Error(`Unexpected platform ${platform}`);
+    throw new Error(`Unexpected platform ${platform as string}`);
   }
 }

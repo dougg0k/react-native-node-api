@@ -1,10 +1,16 @@
 {
-  "files": [],
+  "extends": "@tsconfig/node22",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true
+  },
+  "files": ["prettier.config.js", "eslint.config.js"],
   "references": [
     { "path": "./packages/host/tsconfig.json" },
     { "path": "./packages/gyp-to-cmake/tsconfig.json" },
     { "path": "./packages/cmake-rn/tsconfig.json" },
     { "path": "./packages/ferric/tsconfig.json" },
-    { "path": "./packages/node-addon-examples/tsconfig.json" }
+    { "path": "./packages/node-addon-examples/tsconfig.json" },
+    { "path": "./packages/node-tests/tsconfig.json" }
   ]
 }

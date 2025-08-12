@@ -9,11 +9,12 @@ import {
 } from "mocha-remote-react-native";
 
 import { suites as nodeAddonExamplesSuites } from "@react-native-node-api/node-addon-examples";
+import { suites as nodeTestsSuites } from "@react-native-node-api/node-tests";
 
 function describeIf(
   condition: boolean,
   title: string,
-  fn: (this: Mocha.Suite) => void
+  fn: (this: Mocha.Suite) => void,
 ) {
   return condition ? describe(title, fn) : describe.skip(title, fn);
 }
@@ -21,24 +22,29 @@ function describeIf(
 type Context = {
   allTests?: boolean;
   nodeAddonExamples?: boolean;
+  nodeTests?: boolean;
   ferricExample?: boolean;
 };
 
 function loadTests({
   allTests = false,
   nodeAddonExamples = allTests,
+  nodeTests = allTests,
   ferricExample = allTests,
 }: Context) {
   describeIf(nodeAddonExamples, "Node Addon Examples", () => {
     for (const [suiteName, examples] of Object.entries(
-      nodeAddonExamplesSuites
+      nodeAddonExamplesSuites,
     )) {
       describe(suiteName, () => {
         for (const [exampleName, requireExample] of Object.entries(examples)) {
           it(exampleName, async () => {
             const test = requireExample();
             if (test instanceof Function) {
-              await test();
+              const result = test();
+              if (result instanceof Promise) {
+                await result;
+              }
             }
           });
         }
@@ -46,10 +52,27 @@ function loadTests({
     }
   });
 
+  describeIf(nodeTests, "Node Tests", () => {
+    function registerTestSuite(suite: typeof nodeTestsSuites) {
+      for (const [name, suiteOrTest] of Object.entries(suite)) {
+        if (typeof suiteOrTest === "function") {
+          it(name, suiteOrTest);
+        } else {
+          describe(name, () => {
+            registerTestSuite(suiteOrTest);
+          });
+        }
+      }
+    }
+
+    registerTestSuite(nodeTestsSuites);
+  });
+
   describeIf(ferricExample, "ferric-example", () => {
     it("exports a callable sum function", () => {
-      /* eslint-disable-next-line @typescript-eslint/no-require-imports -- TODO: Determine why a dynamic import doesn't work on Android */
-      const exampleAddon = require("ferric-example");
+      const exampleAddon =
+        /* eslint-disable-next-line @typescript-eslint/no-require-imports -- TODO: Determine why a dynamic import doesn't work on Android */
+        require("ferric-example") as typeof import("ferric-example");
       const result = exampleAddon.sum(1, 3);
       if (result !== 4) {
         throw new Error(`Expected 1 + 3 to equal 4, but got ${result}`);
