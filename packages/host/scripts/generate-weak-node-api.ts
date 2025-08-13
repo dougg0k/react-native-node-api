@@ -4,7 +4,7 @@ import cp from "node:child_process";
 
 import { FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
 
-export const WEAK_NODE_API_PATH = path.join(__dirname, "../weak-node-api");
+export const WEAK_NODE_API_PATH = path.join(import.meta.dirname, "../weak-node-api");
 
 /**
  * Generates source code for a version script for the given Node API version.
