@@ -41,7 +41,7 @@
   ],
   "scripts": {
     "build": "tsc --build",
-    "copy-node-api-headers": "tsx scripts/copy-node-api-headers.ts",
+    "copy-node-api-headers": "tsx --tsconfig ./tsconfig.node-scripts.json scripts/copy-node-api-headers.ts",
     "generate-weak-node-api": "tsx scripts/generate-weak-node-api.ts",
     "generate-weak-node-api-injector": "tsx scripts/generate-weak-node-api-injector.ts",
     "build-weak-node-api": "cmake-rn --no-auto-link --no-weak-node-api-linkage --xcframework-extension --source ./weak-node-api --out ./weak-node-api",
