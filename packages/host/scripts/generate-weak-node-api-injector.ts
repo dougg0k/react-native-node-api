@@ -4,7 +4,7 @@ import cp from "node:child_process";
 
 import { FunctionDecl, getNodeApiFunctions } from "./node-api-functions";
 
-export const CPP_SOURCE_PATH = path.join(import.meta.dirname, "../cpp");
+export const CPP_SOURCE_PATH = path.join(__dirname, "../cpp");
 
 // TODO: Remove when all runtime Node API functions are implemented
 const IMPLEMENTED_RUNTIME_FUNCTIONS = [
